@@ -1,3 +1,11 @@
-# netlify.toml
-[context.branch-deploy]
-command = "hugo -b $DEPLOY_PRIME_URL --buildFuture"
+[build]
+  command = "hugo"
+  publish = "public"
+
+[build.environment]
+  HUGO_VERSION = "0.51"
+  HUGO_ENABLEGITINFO = "true"
+  HUGO_ENV = "production"
+
+[context.production.environment]
+  HUGO_ENV = "production hugo --gc --minify"
