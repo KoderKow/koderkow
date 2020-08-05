@@ -2,7 +2,7 @@ baseurl = "https://koderkow.rbind.io/"
 languageCode = "en"
 defaultContentLanguage = "en"
 title = "Kyle Harris"
-theme = "hugo-theme-dream"
+theme = "dream"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 # copyright = ""
