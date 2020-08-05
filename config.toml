@@ -1,0 +1,49 @@
+baseurl = "https://koderkow.rbind.io/"
+languageCode = "en"
+defaultContentLanguage = "en"
+title = "Kyle Harris"
+theme = "hugo-theme-dream"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+# copyright = ""
+
+# googleAnalytics = ""
+
+disqusShortname = "KoderKow"
+
+# enableRobotsTXT = true
+
+[params]
+  background = "#252323"
+  # backgroundImage = "/me/background.jpg"
+  linkColor = "seagreen"
+
+  author = "Kyle"
+  # description = ""
+  avatar = "https://pbs.twimg.com/profile_images/1143728869851238402/1SoVACjN_400x400.jpg"
+  motto = "And that's why Iturned one of your pistols into a banana."
+
+  # rss = true
+
+  # utterancesRepo = ""
+  
+  email = "KoderKow@gmail.com"
+  twitter = "KoderKow"
+  # facebook = ""
+  # instagram = ""
+  linkedin = "KyleWHarris"
+  github = "KoderKow"
+  # stackoverflow = ""
+  # codepen = ""
+
+  siteStartYear = 2020
+
+  # favicon = "/favicon.ico"
+
+  # options
+  showSummaryCoverInPost = true
+
+  # dark mode
+  darkLinkColor = "darkseagreen"
+  darkNav = true 
+  dark404 = true
