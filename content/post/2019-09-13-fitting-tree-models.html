@@ -3,11 +3,8 @@ title: Fitting Tree Models
 author: Kyle Harris
 date: '2019-09-13'
 slug: fitting-tree-models
-categories:
-  - R
-  - machine learning
-tags:
-  - Trees
+categories: ["Programming"]
+tags: ["R", "Machine Learning"]
 description: ~
 featured_image: ~
 output:
@@ -191,44 +188,48 @@ skip_to_here</code></pre>
 ## )</code></pre>
 <pre class="r"><code>data_dictionary</code></pre>
 <pre><code>## # A tibble: 14 x 2
-##    column_name    description                                              
-##    &lt;chr&gt;          &lt;chr&gt;                                                    
-##  1 age            &quot; continuous.&quot;                                           
-##  2 workclass      &quot; Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, …
-##  3 fnlwgt         &quot; continuous.&quot;                                           
-##  4 education      &quot; Bachelors, Some-college, 11th, HS-grad, Prof-school, A…
-##  5 education-num  &quot; continuous.&quot;                                           
-##  6 marital-status &quot; Married-civ-spouse, Divorced, Never-married, Separated…
-##  7 occupation     &quot; Tech-support, Craft-repair, Other-service, Sales, Exec…
-##  8 relationship   &quot; Wife, Own-child, Husband, Not-in-family, Other-relativ…
-##  9 race           &quot; White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, …
-## 10 sex            &quot; Female, Male.&quot;                                         
-## 11 capital-gain   &quot; continuous.&quot;                                           
-## 12 capital-loss   &quot; continuous.&quot;                                           
-## 13 hours-per-week &quot; continuous.&quot;                                           
-## 14 native-country &quot; United-States, Cambodia, England, Puerto-Rico, Canada,…</code></pre>
+##    column_name    description                                                   
+##    &lt;chr&gt;          &lt;chr&gt;                                                         
+##  1 age            &quot; continuous.&quot;                                                
+##  2 workclass      &quot; Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local…
+##  3 fnlwgt         &quot; continuous.&quot;                                                
+##  4 education      &quot; Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-…
+##  5 education-num  &quot; continuous.&quot;                                                
+##  6 marital-status &quot; Married-civ-spouse, Divorced, Never-married, Separated, Wid…
+##  7 occupation     &quot; Tech-support, Craft-repair, Other-service, Sales, Exec-mana…
+##  8 relationship   &quot; Wife, Own-child, Husband, Not-in-family, Other-relative, Un…
+##  9 race           &quot; White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black…
+## 10 sex            &quot; Female, Male.&quot;                                              
+## 11 capital-gain   &quot; continuous.&quot;                                                
+## 12 capital-loss   &quot; continuous.&quot;                                                
+## 13 hours-per-week &quot; continuous.&quot;                                                
+## 14 native-country &quot; United-States, Cambodia, England, Puerto-Rico, Canada, Germ…</code></pre>
 <p>From information seen on the website about our data, we know there should be 15 rows. Exploring the data in the browser we know the category <em>income</em> is the last column. With that information we will create an additional row to the data dictionary so we have all the columns we need.</p>
-<pre class="r"><code>data_dictionary[nrow(data_dictionary) + 1, ] &lt;- c(&quot;income&quot;, &quot;&gt;50K, &lt;=50K&quot;)
+<pre class="r"><code>data_dictionary &lt;- data_dictionary %&gt;% 
+  add_row(
+    column_name =  &quot;income&quot;,
+    description = &quot;&gt;50K, &lt;=50K&quot;
+  )
 
 data_dictionary</code></pre>
 <pre><code>## # A tibble: 15 x 2
-##    column_name    description                                              
-##  * &lt;chr&gt;          &lt;chr&gt;                                                    
-##  1 age            &quot; continuous.&quot;                                           
-##  2 workclass      &quot; Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, …
-##  3 fnlwgt         &quot; continuous.&quot;                                           
-##  4 education      &quot; Bachelors, Some-college, 11th, HS-grad, Prof-school, A…
-##  5 education-num  &quot; continuous.&quot;                                           
-##  6 marital-status &quot; Married-civ-spouse, Divorced, Never-married, Separated…
-##  7 occupation     &quot; Tech-support, Craft-repair, Other-service, Sales, Exec…
-##  8 relationship   &quot; Wife, Own-child, Husband, Not-in-family, Other-relativ…
-##  9 race           &quot; White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, …
-## 10 sex            &quot; Female, Male.&quot;                                         
-## 11 capital-gain   &quot; continuous.&quot;                                           
-## 12 capital-loss   &quot; continuous.&quot;                                           
-## 13 hours-per-week &quot; continuous.&quot;                                           
-## 14 native-country &quot; United-States, Cambodia, England, Puerto-Rico, Canada,…
-## 15 income         &gt;50K, &lt;=50K</code></pre>
+##    column_name    description                                                   
+##    &lt;chr&gt;          &lt;chr&gt;                                                         
+##  1 age            &quot; continuous.&quot;                                                
+##  2 workclass      &quot; Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local…
+##  3 fnlwgt         &quot; continuous.&quot;                                                
+##  4 education      &quot; Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-…
+##  5 education-num  &quot; continuous.&quot;                                                
+##  6 marital-status &quot; Married-civ-spouse, Divorced, Never-married, Separated, Wid…
+##  7 occupation     &quot; Tech-support, Craft-repair, Other-service, Sales, Exec-mana…
+##  8 relationship   &quot; Wife, Own-child, Husband, Not-in-family, Other-relative, Un…
+##  9 race           &quot; White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black…
+## 10 sex            &quot; Female, Male.&quot;                                              
+## 11 capital-gain   &quot; continuous.&quot;                                                
+## 12 capital-loss   &quot; continuous.&quot;                                                
+## 13 hours-per-week &quot; continuous.&quot;                                                
+## 14 native-country &quot; United-States, Cambodia, England, Puerto-Rico, Canada, Germ…
+## 15 income         &quot;&gt;50K, &lt;=50K&quot;</code></pre>
 <p>I am a fan of snake case, so we will replace the “-” with &quot;_&quot;. Then we will use the data dictionary’s <em>column_name</em> feature to label the test/train data we will be reading in. For data exploration and cleaning I will be combining the test and training sets. To ensure an easy split of data when it comes to modeling I will add a <em>group</em> feature so we can later split the full data set with ease.</p>
 <pre class="r"><code>data_dictionary &lt;- data_dictionary %&gt;% 
   mutate(column_name = str_replace_all(column_name, &quot;-&quot;, &quot;_&quot;))
@@ -258,7 +259,7 @@ train &lt;- read_csv(
 ## )</code></pre>
 <p>When looking at the data online we see the first line of the test data has a line stating “1x3 Cross validator”. This will cause an error so we will skip the first line and then combine the two datasets.</p>
 <pre class="r"><code>test &lt;- read_csv(
-  file = &quot;/Users/kow/Downloads/adult.test&quot;,
+  file = test_url,
   skip = 1,
   col_names = data_dictionary$column_name
 ) %&gt;% 
@@ -286,38 +287,636 @@ train &lt;- read_csv(
 <h1>EDA</h1>
 <p><hc>skim()</hc> from the <strong>skimr</strong> package will give us the view <hc>summary()</hc> or <strong>dplyr</strong>’s <hc>glimpse()</hc> does, but with additional information.</p>
 <pre class="r"><code>skim(all_data)</code></pre>
-<pre><code>## Skim summary statistics
-##  n obs: 48842 
-##  n variables: 16 
-## 
-## ── Variable type:character ────────────────────────
-##        variable missing complete     n min max empty n_unique
-##       education       0    48842 48842   3  12     0       16
-##           group       0    48842 48842   4   5     0        2
-##          income       0    48842 48842   4   6     0        4
-##  marital_status       0    48842 48842   7  21     0        7
-##  native_country       0    48842 48842   1  26     0       42
-##      occupation       0    48842 48842   1  17     0       15
-##            race       0    48842 48842   5  18     0        5
-##    relationship       0    48842 48842   4  14     0        6
-##             sex       0    48842 48842   4   6     0        2
-##       workclass       0    48842 48842   1  16     0        9
-## 
-## ── Variable type:numeric ──────────────────────────
-##        variable missing complete     n      mean        sd    p0      p25
-##             age       0    48842 48842     38.64     13.71    17     28  
-##    capital_gain       0    48842 48842   1079.07   7452.02     0      0  
-##    capital_loss       0    48842 48842     87.5     403        0      0  
-##   education_num       0    48842 48842     10.08      2.57     1      9  
-##          fnlwgt       0    48842 48842 189664.13 105604.03 12285 117550.5
-##  hours_per_week       0    48842 48842     40.42     12.39     1     40  
-##       p50    p75    p100     hist
-##      37       48      90 ▇▇▇▆▃▂▁▁
-##       0        0   99999 ▇▁▁▁▁▁▁▁
-##       0        0    4356 ▇▁▁▁▁▁▁▁
-##      10       12      16 ▁▁▁▁▇▁▃▁
-##  178144.5 237642 1490400 ▇▅▁▁▁▁▁▁
-##      40       45      99 ▁▁▁▇▁▁▁▁</code></pre>
+<table style='width: auto;'
+        class='table table-condensed'>
+<caption>
+<span id="tab:unnamed-chunk-8">Table 1: </span>Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+all_data
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+48842
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+_______________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+________________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+min
+</th>
+<th style="text-align:right;">
+max
+</th>
+<th style="text-align:right;">
+empty
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:right;">
+whitespace
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+workclass
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+education
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+marital_status
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+occupation
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+relationship
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sex
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+native_country
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+group
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+38.64
+</td>
+<td style="text-align:right;">
+13.71
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+28.0
+</td>
+<td style="text-align:right;">
+37.0
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:left;">
+▇▇▅▂▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fnlwgt
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+189664.13
+</td>
+<td style="text-align:right;">
+105604.03
+</td>
+<td style="text-align:right;">
+12285
+</td>
+<td style="text-align:right;">
+117550.5
+</td>
+<td style="text-align:right;">
+178144.5
+</td>
+<td style="text-align:right;">
+237642
+</td>
+<td style="text-align:right;">
+1490400
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+education_num
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10.08
+</td>
+<td style="text-align:right;">
+2.57
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+9.0
+</td>
+<td style="text-align:right;">
+10.0
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:left;">
+▁▁▇▃▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+capital_gain
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1079.07
+</td>
+<td style="text-align:right;">
+7452.02
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+99999
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+capital_loss
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+87.50
+</td>
+<td style="text-align:right;">
+403.00
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0.0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4356
+</td>
+<td style="text-align:left;">
+▇▁▁▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hours_per_week
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+40.42
+</td>
+<td style="text-align:right;">
+12.39
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+40.0
+</td>
+<td style="text-align:right;">
+40.0
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+99
+</td>
+<td style="text-align:left;">
+▁▇▃▁▁
+</td>
+</tr>
+</tbody>
+</table>
 <div id="data-cleaning" class="section level2">
 <h2>Data Cleaning</h2>
 <p>I will now go through each variable and collapse character features where available. Hopefully this will increase our accuracy due to possible under-representation of groups in this data. The flow will be counting the data and grouping the factors to the best of my knowledge. Grouping will be with assumptions I make in my noggin’.</p>
@@ -694,10 +1293,10 @@ all_data %&gt;%
 all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <p><hc>all_plots</hc> holds all plots in a <em>list</em>. We will go through one by one so we can have a deeper understanding of our data. We could use a graphing function such as <hc>pairs()</hc> or <hc>ggpairs()</hc>, however, I really wanted to look at all variables one by one closely and I got to practice some dplyr programming ;)</p>
 <pre class="r"><code>all_plots[[1]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p>On average there are more people that have an income of <em>&gt;50k</em> who are older.</p>
 <pre class="r"><code>all_plots[[2]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
 <li>Private: <em>&lt;=50k</em></li>
@@ -706,7 +1305,7 @@ all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <li>Unknown: <em>&lt;=50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[3]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
 <li>High School: <em>&lt;=50k</em></li>
@@ -718,7 +1317,7 @@ all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <li>Professional School: <em>&gt;50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[4]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
 <li>Married: <em>&gt;50k</em></li>
@@ -726,7 +1325,7 @@ all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <li>Not Married: <em>&lt;=50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[5]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <p>There are a lot of different occupations so I will point out the obvious points.</p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
@@ -738,7 +1337,7 @@ all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <li>Unknown: <em>&lt;=50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[6]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
 <li>Husband: <em>&gt;50k</em></li>
@@ -749,7 +1348,7 @@ all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <li>Other-relative: <em>&lt;=50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[7]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
 <li>White: <em>&gt;50k</em></li>
@@ -759,23 +1358,23 @@ all_plots &lt;- map2(all_data, names(all_data), plot_em)</code></pre>
 <li>Other: <em>&lt;=50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[8]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 <p>Higher Proportion per Outcome (<span class="math inline">\(y = income\)</span>):</p>
 <ul>
 <li>Male: <em>&gt;50k</em></li>
 <li>Female: <em>&lt;=50k</em></li>
 </ul>
 <pre class="r"><code>all_plots[[9]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 <p>No comment.</p>
 <pre class="r"><code>all_plots[[10]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
 <p>Also no comment.</p>
 <pre class="r"><code>all_plots[[11]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
 <p>We can see the average between line is around 40 for both <em>&lt;=50k</em> and <em>&gt;50k</em>. It appears on average more people in the <em>&gt;50k</em> group work more hours.</p>
 <pre class="r"><code>all_plots[[14]]</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
 <p>Mostly equal, Americas has a high N so it is hard to see a signal.</p>
 </div>
 </div>
@@ -1118,12 +1717,12 @@ rpart.plot(
   type = 0,
   extra = 0
   )</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
 <p>Using this flow we can take a person and their information and make a prediction on how much income they make. This is the power of a tree, we can interpreit the model and how it works every step of the way with ease!</p>
 <p>There are a few more things we can do to our model. <strong>Pruning</strong> can possibly reduce the size of the tree (simple is ideal!) without losing and predictive power on classifications. We can do this by looking at the <hc>cp</hc>, aka <em>complexity parameter</em>.</p>
 <p>CP is a penalty term that helps control tree size. The smaller the CP the more complex a tree will be. The <hc>rpart()</hc> function computes the 10-fold cross validation error of the model over various values for CP and stores the results in a table inside the model. We can plot the cross validation error across different values of CP using <hc>plotcp()</hc>.</p>
 <pre class="r"><code>plotcp(best_rpart)</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
 <p>Here we can quickly get an estimate for the omptimal value of CP. To retreieve the optimal CP value we can look at the CP table stored in the model and look where the <em>xerror</em> is minimized.</p>
 <pre class="r"><code>best_rpart$cptable</code></pre>
 <pre><code>##           CP nsplit rel error    xerror        xstd
@@ -1147,7 +1746,7 @@ cp_opt</code></pre>
   type = 0,
   extra = 0
   )</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
 <p>It appears in this instance, pruning did not change the visual of our model. Now onto the last part of of the evaluation is to look at a confusion matrix. A confusion matrix will show us a more detailed breakdown of correct and incorrect classifications for each class. We will use the <strong>caret</strong> package to produce the matrix.</p>
 <pre class="r"><code>class_prediction &lt;- predict(
   object = best_rpart_opt,
@@ -1246,7 +1845,7 @@ rf_example &lt;- randomForest(
   ntree = 1000
 )
 toc()</code></pre>
-<pre><code>## 94.728 sec elapsed</code></pre>
+<pre><code>## 237.128 sec elapsed</code></pre>
 <pre class="r"><code>tic()
 ranger_example &lt;- ranger(
   formula = income ~ .,
@@ -1256,7 +1855,7 @@ ranger_example &lt;- ranger(
   verbose = FALSE
 )
 toc()</code></pre>
-<pre><code>## 67.176 sec elapsed</code></pre>
+<pre><code>## 75.538 sec elapsed</code></pre>
 <p>For 1,000 trees it saves us almost 1 minute! To explore random forests and bagging, the <code>randomForest()</code> function has nice built in functions for visualizing the model. When we want to find an optimized model we will grid search with <strong>ranger</strong>.</p>
 <div id="randomforest-output" class="section level4">
 <h4>randomForest Output</h4>
@@ -1268,15 +1867,15 @@ toc()</code></pre>
 ##                      Number of trees: 1000
 ## No. of variables tried at each split: 12
 ## 
-##         OOB estimate of  error rate: 15.35%
+##         OOB estimate of  error rate: 15.36%
 ## Confusion matrix:
 ##       &lt;=50K &gt;50K class.error
-## &lt;=50K 22677 2043  0.08264563
-## &gt;50K   2956 4885  0.37699273</code></pre>
+## &lt;=50K 22670 2050   0.0829288
+## &gt;50K   2950 4891   0.3762275</code></pre>
 <p>When we <em>print</em> the model we can see the original call to create the data, the type of random forest, tree count, number of variables per split, OOB estimate, and a confusion matrix. The OOB estimate takes the prediction for each tree. For example, we trained 1,000 trees. The OOB</p>
 <p>We can see the error rate as the tree count increases using the <hc>plot()</hc> function.</p>
 <pre class="r"><code>plot(rf_example)</code></pre>
-<p><img src="/posts/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<p><img src="/post/2019-09-13-fitting-tree-models_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
 <p>We can see that around 175 trees the error stops decreasing. This meaning we used too many trees, which translate to too much time spent waiting in terms of computation time. This means we can train a model with a much smaller amount of trees. This will be covered when we do a grid search, but it is nice to visual a model and see how many trees optimizes the error.</p>
 </div>
 </div>
@@ -1321,7 +1920,8 @@ rf_grid_search</code></pre>
 
 rf_grid_search &lt;- rf_grid_search %&gt;% 
   mutate(fit = pmap(rf_grid_search, rf_mod))</code></pre>
-<pre><code>## Growing trees.. Progress: 97%. Estimated remaining time: 1 seconds.</code></pre>
+<pre><code>## Growing trees.. Progress: 99%. Estimated remaining time: 0 seconds.
+## Growing trees.. Progress: 64%. Estimated remaining time: 17 seconds.</code></pre>
 <pre class="r"><code>rf_grid_search</code></pre>
 <pre><code>## # A tibble: 9 x 3
 ##    mtry num.trees fit     
@@ -1365,15 +1965,15 @@ rf_grid_search</code></pre>
 <pre><code>## # A tibble: 9 x 4
 ##    mtry num.trees fit      test_accuracy
 ##   &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;           &lt;dbl&gt;
-## 1     4       300 &lt;ranger&gt;         0.862
-## 2     4       100 &lt;ranger&gt;         0.861
-## 3     4       500 &lt;ranger&gt;         0.861
-## 4     6       300 &lt;ranger&gt;         0.855
-## 5     6       500 &lt;ranger&gt;         0.854
-## 6     6       100 &lt;ranger&gt;         0.854
-## 7    12       100 &lt;ranger&gt;         0.846
-## 8    12       500 &lt;ranger&gt;         0.846
-## 9    12       300 &lt;ranger&gt;         0.845</code></pre>
+## 1     4       500 &lt;ranger&gt;         0.862
+## 2     4       300 &lt;ranger&gt;         0.861
+## 3     4       100 &lt;ranger&gt;         0.860
+## 4     6       300 &lt;ranger&gt;         0.854
+## 5     6       500 &lt;ranger&gt;         0.853
+## 6     6       100 &lt;ranger&gt;         0.852
+## 7    12       300 &lt;ranger&gt;         0.847
+## 8    12       100 &lt;ranger&gt;         0.846
+## 9    12       500 &lt;ranger&gt;         0.846</code></pre>
 </div>
 <div id="best-model-evaluation" class="section level3">
 <h3>Best Model Evaluation</h3>
@@ -1389,14 +1989,14 @@ best_rf_mod</code></pre>
 ##  ranger(income ~ ., data = train, ...) 
 ## 
 ## Type:                             Classification 
-## Number of trees:                  300 
+## Number of trees:                  500 
 ## Sample size:                      32561 
 ## Number of independent variables:  12 
 ## Mtry:                             4 
 ## Target node size:                 1 
 ## Variable importance mode:         none 
 ## Splitrule:                        gini 
-## OOB prediction error:             13.89 %</code></pre>
+## OOB prediction error:             13.85 %</code></pre>
 <pre class="r"><code>features &lt;- test %&gt;%
   select(-income)
 labels   &lt;- test %&gt;% 
@@ -1416,26 +2016,26 @@ caret::confusionMatrix(
 ## 
 ##           Reference
 ## Prediction &lt;=50K  &gt;50K
-##      &lt;=50K 11619  1423
-##      &gt;50K    816  2423
+##      &lt;=50K 11603  1422
+##      &gt;50K    832  2424
 ##                                           
-##                Accuracy : 0.8625          
-##                  95% CI : (0.8571, 0.8677)
+##                Accuracy : 0.8616          
+##                  95% CI : (0.8562, 0.8668)
 ##     No Information Rate : 0.7638          
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.5969          
+##                   Kappa : 0.5949          
 ##                                           
 ##  Mcnemar&#39;s Test P-Value : &lt; 2.2e-16       
 ##                                           
-##             Sensitivity : 0.9344          
-##             Specificity : 0.6300          
-##          Pos Pred Value : 0.8909          
-##          Neg Pred Value : 0.7481          
+##             Sensitivity : 0.9331          
+##             Specificity : 0.6303          
+##          Pos Pred Value : 0.8908          
+##          Neg Pred Value : 0.7445          
 ##              Prevalence : 0.7638          
-##          Detection Rate : 0.7137          
-##    Detection Prevalence : 0.8011          
-##       Balanced Accuracy : 0.7822          
+##          Detection Rate : 0.7127          
+##    Detection Prevalence : 0.8000          
+##       Balanced Accuracy : 0.7817          
 ##                                           
 ##        &#39;Positive&#39; Class : &lt;=50K           
 ## </code></pre>

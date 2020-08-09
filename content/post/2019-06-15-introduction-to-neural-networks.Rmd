@@ -3,10 +3,8 @@ title: Introduction to Neural Networks
 author: Kyle Harris
 date: '2019-06-15'
 slug: introduction-to-neural-networks
-categories:
-  - R
-  - machine learning
-tags: []
+categories: ["Programming"]
+tags: ["R", "Machine Learning"]
 description: ~
 featured_image: ~
 ---

@@ -2,8 +2,8 @@
 title: Making the Transcribing Process a Bit Simpler
 author: Kyle Harris
 date: '2018-06-10'
-categories: ["R"]
-tags: ["transcription", "tidyverse"]
+categories: ["Programming"]
+tags: ["R"]
 cover: /img/post_cover/transcription_process.png
 ---
 

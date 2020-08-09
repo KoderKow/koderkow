@@ -3,13 +3,9 @@ title: 'Kaggle: Titanic'
 author: Kyle Harris
 date: '2020-05-26'
 slug: kaggle-titanic
-categories:
-  - R
-  - machine learning
-tags:
-  - tidymodels
-  - kaggle
-description: Exploration of the titanic data set on kaggle. Includes first run of using tidymodels!ß
+categories: ["Programming"]
+tags: ["R", "Machine Learning", "Kaggle"]
+description: Exploration of the titanic data set on kaggle. Includes first run of using tidymodels!
 featured_image: ~
 ---
 
@@ -878,36 +874,17 @@ rpart_res &lt;-
   tune_grid(
     resamples = cell_folds,
     grid = rpart_grid
-    )</code></pre>
-<pre><code>## ! Fold2: model  1/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  2/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  3/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  4/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  5/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  6/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  7/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  8/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  9/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model 10/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  1/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  2/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  3/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  4/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  5/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  6/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  7/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  8/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  9/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model 10/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre class="r"><code>rpart_res</code></pre>
+    )
+
+rpart_res</code></pre>
 <pre><code>## #  5-fold cross-validation 
 ## # A tibble: 5 x 4
-##   splits            id    .metrics          .notes           
-##   &lt;named list&gt;      &lt;chr&gt; &lt;list&gt;            &lt;list&gt;           
-## 1 &lt;split [571/143]&gt; Fold1 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt; 
-## 2 &lt;split [571/143]&gt; Fold2 &lt;tibble [20 × 6]&gt; &lt;tibble [10 × 1]&gt;
-## 3 &lt;split [571/143]&gt; Fold3 &lt;tibble [20 × 6]&gt; &lt;tibble [10 × 1]&gt;
-## 4 &lt;split [571/143]&gt; Fold4 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt; 
+##   splits            id    .metrics          .notes          
+##   &lt;named list&gt;      &lt;chr&gt; &lt;list&gt;            &lt;list&gt;          
+## 1 &lt;split [571/143]&gt; Fold1 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt;
+## 2 &lt;split [571/143]&gt; Fold2 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt;
+## 3 &lt;split [571/143]&gt; Fold3 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt;
+## 4 &lt;split [571/143]&gt; Fold4 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt;
 ## 5 &lt;split [572/142]&gt; Fold5 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 1]&gt;</code></pre>
 <pre class="r"><code>best_rpart &lt;- rpart_res %&gt;%
   select_best(&quot;roc_auc&quot;)
@@ -916,27 +893,27 @@ best_rpart</code></pre>
 <pre><code>## # A tibble: 1 x 3
 ##   cost_complexity tree_depth min_n
 ##             &lt;dbl&gt;      &lt;int&gt; &lt;int&gt;
-## 1   0.00000000472         14    37</code></pre>
+## 1    0.0000000289          9    18</code></pre>
 <pre class="r"><code>final_rpart_wf &lt;- 
   rpart_wf %&gt;% 
   finalize_workflow(best_rpart)</code></pre>
 <pre class="r"><code>rpart_last_fit &lt;- 
   final_rpart_wf %&gt;%
-  last_fit(titanic_split) 
-
-rpart_last_fit</code></pre>
+  last_fit(titanic_split) </code></pre>
+<pre><code>## ! Resample1: model (predictions): Novel levels found in column &#39;embarked_from&#39;: NA. T...</code></pre>
+<pre class="r"><code>rpart_last_fit</code></pre>
 <pre><code>## # # Monte Carlo cross-validation (0.8/0.2) with 1 resamples  
 ## # A tibble: 1 x 6
 ##   splits        id           .metrics      .notes      .predictions    .workflow
 ##   &lt;list&gt;        &lt;chr&gt;        &lt;list&gt;        &lt;list&gt;      &lt;list&gt;          &lt;list&gt;   
-## 1 &lt;split [714/… train/test … &lt;tibble [2 ×… &lt;tibble [0… &lt;tibble [177 ×… &lt;workflo…</code></pre>
+## 1 &lt;split [714/… train/test … &lt;tibble [2 ×… &lt;tibble [1… &lt;tibble [177 ×… &lt;workflo…</code></pre>
 <pre class="r"><code>rpart_last_fit %&gt;%
   collect_metrics()</code></pre>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.746
-## 2 roc_auc  binary         0.830</code></pre>
+## 1 accuracy binary         0.831
+## 2 roc_auc  binary         0.848</code></pre>
 <pre class="r"><code>rpart_last_fit %&gt;%
   collect_predictions() %&gt;% 
   roc_curve(survived, .pred_yes) %&gt;% 
@@ -966,23 +943,45 @@ rpart_fit</code></pre>
 ## node), split, n, loss, yval, (yprob)
 ##       * denotes terminal node
 ## 
-##  1) root 891 342 no (0.61616162 0.38383838)  
-##    2) title=Dr,Mr,Rev,Sir 537  87 no (0.83798883 0.16201117)  
-##      4) cabin_record=no 436  48 no (0.88990826 0.11009174) *
-##      5) cabin_record=yes 101  39 no (0.61386139 0.38613861)  
-##       10) age&gt;=36.25 64  20 no (0.68750000 0.31250000) *
-##       11) age&lt; 36.25 37  18 yes (0.48648649 0.51351351)  
-##         22) age&lt; 31.5 24  10 no (0.58333333 0.41666667) *
-##         23) age&gt;=31.5 13   4 yes (0.30769231 0.69230769) *
-##    3) title=Lady,Master,Miss,Mrs 354  99 yes (0.27966102 0.72033898)  
-##      6) ticket_class=Higher 172  83 no (0.51744186 0.48255814)  
-##       12) ticket_group_size&gt;=4.5 44   3 no (0.93181818 0.06818182) *
-##       13) ticket_group_size&lt; 4.5 128  48 yes (0.37500000 0.62500000)  
-##         26) age&gt;=24.2 42  19 no (0.54761905 0.45238095)  
-##           52) title=Miss 14   4 no (0.71428571 0.28571429) *
-##           53) title=Mrs 28  13 yes (0.46428571 0.53571429) *
-##         27) age&lt; 24.2 86  25 yes (0.29069767 0.70930233) *
-##      7) ticket_class=Lower,Middle 182  10 yes (0.05494505 0.94505495) *</code></pre>
+##   1) root 891 342 no (0.61616162 0.38383838)  
+##     2) title=Dr,Mr,Rev,Sir 537  87 no (0.83798883 0.16201117)  
+##       4) cabin_record=no 436  48 no (0.88990826 0.11009174) *
+##       5) cabin_record=yes 101  39 no (0.61386139 0.38613861)  
+##        10) fare&lt; 7.9 8   0 no (1.00000000 0.00000000) *
+##        11) fare&gt;=7.9 93  39 no (0.58064516 0.41935484)  
+##          22) age&gt;=42.1 47  14 no (0.70212766 0.29787234)  
+##            44) age&lt; 47.5 14   1 no (0.92857143 0.07142857) *
+##            45) age&gt;=47.5 33  13 no (0.60606061 0.39393939)  
+##              90) age&gt;=49.5 25   7 no (0.72000000 0.28000000) *
+##              91) age&lt; 49.5 8   2 yes (0.25000000 0.75000000) *
+##          23) age&lt; 42.1 46  21 yes (0.45652174 0.54347826)  
+##            46) age&lt; 24.5 8   2 no (0.75000000 0.25000000) *
+##            47) age&gt;=24.5 38  15 yes (0.39473684 0.60526316)  
+##              94) age&gt;=28.5 30  14 yes (0.46666667 0.53333333)  
+##               188) age&lt; 31.5 6   1 no (0.83333333 0.16666667) *
+##               189) age&gt;=31.5 24   9 yes (0.37500000 0.62500000) *
+##              95) age&lt; 28.5 8   1 yes (0.12500000 0.87500000) *
+##     3) title=Lady,Master,Miss,Mrs 354  99 yes (0.27966102 0.72033898)  
+##       6) ticket_class=Higher 172  83 no (0.51744186 0.48255814)  
+##        12) ticket_group_size&gt;=4.5 44   3 no (0.93181818 0.06818182) *
+##        13) ticket_group_size&lt; 4.5 128  48 yes (0.37500000 0.62500000)  
+##          26) age&gt;=36.5 8   1 no (0.87500000 0.12500000) *
+##          27) age&lt; 36.5 120  41 yes (0.34166667 0.65833333)  
+##            54) age&gt;=6.4 104  40 yes (0.38461538 0.61538462)  
+##             108) embarked_from=Southampton 52  25 yes (0.48076923 0.51923077)  
+##               216) title=Miss 32  13 no (0.59375000 0.40625000)  
+##                 432) fare&gt;=7.9875 13   2 no (0.84615385 0.15384615) *
+##                 433) fare&lt; 7.9875 19   8 yes (0.42105263 0.57894737)  
+##                   866) age&gt;=22.5 10   4 no (0.60000000 0.40000000) *
+##                   867) age&lt; 22.5 9   2 yes (0.22222222 0.77777778) *
+##               217) title=Master,Mrs 20   6 yes (0.30000000 0.70000000) *
+##             109) embarked_from=Cherbourg,Queenstown 52  15 yes (0.28846154 0.71153846)  
+##               218) fare&gt;=8.08335 23   9 yes (0.39130435 0.60869565)  
+##                 436) fare&lt; 15.3729 14   6 no (0.57142857 0.42857143) *
+##                 437) fare&gt;=15.3729 9   1 yes (0.11111111 0.88888889) *
+##               219) fare&lt; 8.08335 29   6 yes (0.20689655 0.79310345) *
+##            55) age&lt; 6.4 16   1 yes (0.06250000 0.93750000) *
+##       7) ticket_class=Lower,Middle 182  10 yes (0.05494505 0.94505495) *</code></pre>
 <div id="variable-importance" class="section level4">
 <h4>Variable Importance</h4>
 <pre class="r"><code>rpart_fit %&gt;% 
@@ -1000,12 +999,12 @@ pred</code></pre>
 ##    .pred_class passenger_id
 ##    &lt;fct&gt;              &lt;dbl&gt;
 ##  1 no                   892
-##  2 yes                  893
+##  2 no                   893
 ##  3 no                   894
 ##  4 no                   895
 ##  5 yes                  896
 ##  6 no                   897
-##  7 no                   898
+##  7 yes                  898
 ##  8 no                   899
 ##  9 yes                  900
 ## 10 no                   901
@@ -1019,12 +1018,12 @@ data_to_submit</code></pre>
 ##    PassengerId Survived
 ##          &lt;dbl&gt;    &lt;dbl&gt;
 ##  1         892        0
-##  2         893        1
+##  2         893        0
 ##  3         894        0
 ##  4         895        0
 ##  5         896        1
 ##  6         897        0
-##  7         898        0
+##  7         898        1
 ##  8         899        0
 ##  9         900        1
 ## 10         901        0
@@ -1076,26 +1075,6 @@ tune_ranger</code></pre>
     grid = ranger_grid
   )</code></pre>
 <pre><code>## i Creating pre-processing data to finalize unknown parameter: mtry</code></pre>
-<pre><code>## ! Fold2: model  1/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  2/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  3/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  4/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  5/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  6/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  7/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  8/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  9/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model 10/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  1/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  2/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  3/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  4/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  5/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  6/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  7/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  8/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  9/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model 10/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
 <pre class="r"><code>best_ranger &lt;- ranger_res %&gt;%
   select_best(&quot;roc_auc&quot;)
 
@@ -1103,20 +1082,21 @@ best_ranger</code></pre>
 <pre><code>## # A tibble: 1 x 3
 ##    mtry trees min_n
 ##   &lt;int&gt; &lt;int&gt; &lt;int&gt;
-## 1     1   960    17</code></pre>
+## 1     3   790     8</code></pre>
 <pre class="r"><code>final_ranger_wf &lt;- 
   ranger_wf %&gt;% 
   finalize_workflow(best_ranger)</code></pre>
 <pre class="r"><code>ranger_last_fit &lt;- 
   final_ranger_wf %&gt;%
   last_fit(titanic_split)</code></pre>
+<pre><code>## ! Resample1: model (predictions): Novel levels found in column &#39;embarked_from&#39;: NA. T...</code></pre>
 <pre class="r"><code>ranger_last_fit %&gt;%
   collect_metrics()</code></pre>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.802
-## 2 roc_auc  binary         0.853</code></pre>
+## 1 accuracy binary         0.842
+## 2 roc_auc  binary         0.858</code></pre>
 <pre class="r"><code>ranger_last_fit %&gt;%
   collect_predictions() %&gt;% 
   roc_curve(survived, .pred_yes) %&gt;% 
@@ -1143,17 +1123,17 @@ ranger_fit</code></pre>
 ## Ranger result
 ## 
 ## Call:
-##  ranger::ranger(formula = formula, data = data, mtry = ~1L, num.trees = ~960L,      min.node.size = ~17L, num.threads = ~cores, importance = ~&quot;permutation&quot;,      verbose = FALSE, seed = sample.int(10^5, 1), probability = TRUE) 
+##  ranger::ranger(formula = formula, data = data, mtry = ~3L, num.trees = ~790L,      min.node.size = ~8L, num.threads = ~cores, importance = ~&quot;permutation&quot;,      verbose = FALSE, seed = sample.int(10^5, 1), probability = TRUE) 
 ## 
 ## Type:                             Probability estimation 
-## Number of trees:                  960 
+## Number of trees:                  790 
 ## Sample size:                      891 
 ## Number of independent variables:  9 
-## Mtry:                             1 
-## Target node size:                 17 
+## Mtry:                             3 
+## Target node size:                 8 
 ## Variable importance mode:         permutation 
 ## Splitrule:                        gini 
-## OOB prediction error (Brier s.):  0.13599</code></pre>
+## OOB prediction error (Brier s.):  0.1257011</code></pre>
 <div id="variable-importance-plot" class="section level4">
 <h4>Variable Importance Plot</h4>
 <pre class="r"><code>ranger_fit %&gt;% 
@@ -1255,26 +1235,6 @@ xgboost_res &lt;-
     grid = xgb_grid
   )</code></pre>
 <pre><code>## i Creating pre-processing data to finalize unknown parameter: mtry</code></pre>
-<pre><code>## ! Fold2: model  1/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  2/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  3/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  4/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  5/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  6/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  7/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  8/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model  9/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold2: model 10/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  1/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  2/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  3/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  4/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  5/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  6/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  7/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  8/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model  9/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
-<pre><code>## ! Fold3: model 10/10 (predictions): Novel levels found in column &#39;embarked_from&#39;:...</code></pre>
 <pre class="r"><code>xgboost_res %&gt;% 
   collect_metrics() %&gt;% 
   filter(.metric == &quot;roc_auc&quot;) %&gt;% 
@@ -1282,16 +1242,16 @@ xgboost_res &lt;-
 <pre><code>## # A tibble: 10 x 11
 ##     mtry min_n tree_depth learn_rate loss_reduction sample_size .metric
 ##    &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
-##  1     6     2         14   4.88e- 2       3.60e- 8     0.0544  roc_auc
-##  2     2     9         13   3.38e- 7       1.50e- 2     0.0102  roc_auc
-##  3     2    36          1   1.16e- 3       9.63e- 3     0.0254  roc_auc
-##  4     3    32          6   4.40e- 9       3.04e- 5     0.0704  roc_auc
-##  5     4    17          4   9.15e- 9       8.19e- 7     0.00414 roc_auc
-##  6     5    27          3   2.73e- 6       1.60e+ 1     0.0462  roc_auc
-##  7     7    24         11   6.73e- 6       1.62e- 1     0.0921  roc_auc
-##  8     8    11          9   4.31e- 5       9.61e- 5     0.0845  roc_auc
-##  9     9    21         11   2.05e-10       1.48e-10     0.0381  roc_auc
-## 10     9    39          7   3.28e- 3       1.90e- 9     0.0671  roc_auc
+##  1     5     6         11   1.38e- 2 0.000000537        0.0597  roc_auc
+##  2     2    21          3   5.35e- 6 0.0000000324       0.0925  roc_auc
+##  3     3    27          5   7.87e- 8 0.00000000207      0.0441  roc_auc
+##  4     3    33         11   1.69e- 6 0.00371            0.0117  roc_auc
+##  5     4    31         13   4.53e- 3 0.00000788         0.0337  roc_auc
+##  6     6    13         14   1.03e- 8 0.000000000311     0.0681  roc_auc
+##  7     7    22          7   2.24e-10 2.37               0.0866  roc_auc
+##  8     8    36          9   1.13e- 9 0.000407           0.0221  roc_auc
+##  9     9     4          4   1.83e- 4 0.0255             0.00424 roc_auc
+## 10    10    17          1   6.80e- 4 0.904              0.0759  roc_auc
 ## # … with 4 more variables: .estimator &lt;chr&gt;, mean &lt;dbl&gt;, n &lt;int&gt;, std_err &lt;dbl&gt;</code></pre>
 <pre class="r"><code>best_xgb &lt;- xgboost_res %&gt;%
   select_best(&quot;roc_auc&quot;)
@@ -1300,7 +1260,7 @@ best_xgb</code></pre>
 <pre><code>## # A tibble: 1 x 6
 ##    mtry min_n tree_depth learn_rate loss_reduction sample_size
 ##   &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;
-## 1     6     2         14     0.0488   0.0000000360      0.0544</code></pre>
+## 1     5     6         11     0.0138    0.000000537      0.0597</code></pre>
 <pre class="r"><code>final_xgb_wf &lt;- 
   xgb_wf %&gt;% 
   finalize_workflow(best_xgb)
@@ -1322,13 +1282,13 @@ final_xgb_wf</code></pre>
 ## Boosted Tree Model Specification (classification)
 ## 
 ## Main Arguments:
-##   mtry = 6
+##   mtry = 5
 ##   trees = 1000
-##   min_n = 2
-##   tree_depth = 14
-##   learn_rate = 0.0487888028353341
-##   loss_reduction = 3.60061282950323e-08
-##   sample_size = 0.0543747066590004
+##   min_n = 6
+##   tree_depth = 11
+##   learn_rate = 0.0138262330113881
+##   loss_reduction = 5.37301314797003e-07
+##   sample_size = 0.0596607109601609
 ## 
 ## Computational engine: xgboost</code></pre>
 <pre class="r"><code>xgb_fit &lt;- fit(final_xgb_wf, data = main_train)</code></pre>
@@ -1359,9 +1319,9 @@ pred</code></pre>
 ##  4 no                   895
 ##  5 yes                  896
 ##  6 no                   897
-##  7 yes                  898
+##  7 no                   898
 ##  8 no                   899
-##  9 yes                  900
+##  9 no                   900
 ## 10 no                   901
 ## # … with 408 more rows</code></pre>
 <pre class="r"><code>data_to_submit &lt;- pred %&gt;% 
@@ -1378,9 +1338,9 @@ data_to_submit</code></pre>
 ##  4         895        0
 ##  5         896        1
 ##  6         897        0
-##  7         898        1
+##  7         898        0
 ##  8         899        0
-##  9         900        1
+##  9         900        0
 ## 10         901        0
 ## # … with 408 more rows</code></pre>
 <pre class="r"><code>write_csv(data_to_submit, &quot;/Users/Kow/Desktop/20200526_xgb2_kaggle_submission.csv&quot;)</code></pre>

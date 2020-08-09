@@ -3,13 +3,9 @@ title: 'Kaggle: Titanic'
 author: Kyle Harris
 date: '2020-05-26'
 slug: kaggle-titanic
-categories:
-  - R
-  - machine learning
-tags:
-  - tidymodels
-  - kaggle
-description: Exploration of the titanic data set on kaggle. Includes first run of using tidymodels!ß
+categories: ["Programming"]
+tags: ["R", "Machine Learning", "Kaggle"]
+description: Exploration of the titanic data set on kaggle. Includes first run of using tidymodels!
 featured_image: ~
 ---
 

@@ -3,11 +3,8 @@ title: Fitting Tree Models
 author: Kyle Harris
 date: '2019-09-13'
 slug: fitting-tree-models
-categories:
-  - R
-  - machine learning
-tags:
-  - Trees
+categories: ["Programming"]
+tags: ["R", "Machine Learning"]
 description: ~
 featured_image: ~
 output:
@@ -111,7 +108,11 @@ data_dictionary
 From information seen on the website about our data, we know there should be 15 rows. Exploring the data in the browser we know the category *income* is the last column. With that information we will create an additional row to the data dictionary so we have all the columns we need.
 
 ```{r}
-data_dictionary[nrow(data_dictionary) + 1, ] <- c("income", ">50K, <=50K")
+data_dictionary <- data_dictionary %>% 
+  add_row(
+    column_name =  "income",
+    description = ">50K, <=50K"
+  )
 
 data_dictionary
 ```
@@ -133,7 +134,7 @@ When looking at the data online we see the first line of the test data has a lin
 
 ```{r}
 test <- read_csv(
-  file = "/Users/kow/Downloads/adult.test",
+  file = test_url,
   skip = 1,
   col_names = data_dictionary$column_name
 ) %>% 
