@@ -14,13 +14,17 @@ disqusShortname = "KoderKow"
 # enableRobotsTXT = true
 
 [params]
+  highlightjsVersion = "10.1.2"
+  highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
+  highlightjsLang = ["r", "yaml"]
+  highlightjsTheme = "github"
   background = "#252323"
   # backgroundImage = "/me/background.jpg"
   linkColor = "seagreen"
 
   author = "Kyle"
   # description = ""
-  avatar = "/img/discord_icon.png"
+  # avatar = "/img/discord_icon.png"
   # avatar = "https://pbs.twimg.com/profile_images/1143728869851238402/1SoVACjN_400x400.jpg"
   motto = "And that's why I turned one of your pistols into a banana."
 
@@ -37,7 +41,7 @@ disqusShortname = "KoderKow"
   # stackoverflow = ""
   # codepen = ""
 
-  siteStartYear = 2020
+  siteStartYear = 2018
 
   # favicon = "/favicon.ico"
 
@@ -48,3 +52,6 @@ disqusShortname = "KoderKow"
   darkLinkColor = "darkseagreen"
   darkNav = true 
   dark404 = true
+
+[params.gravatar]
+    email = "koderkow@gmail.com"   #uncomment and insert your email address to use gravatar
