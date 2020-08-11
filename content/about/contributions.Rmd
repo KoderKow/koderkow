@@ -1,0 +1,78 @@
+---
+title: "Open Source Contributions"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(glue)
+library(kowr)
+library(knitr)
+library(kableExtra)
+
+d <-
+  list(
+    repo_name = c(
+      "tidylog",
+      "golem",
+      "kowr",
+      "togglr"
+    ),
+    repo_url = c(
+      "https://github.com/elbersb/tidylog/",
+      "https://github.com/ThinkR-open/golem",
+      "https://github.com/KoderKow/kowr",
+      "https://github.com/ThinkR-open/togglr"
+    ),
+    repo_type = c(
+      "R Package (CRAN)",
+      "R Package (CRAN)",
+      "R Package (GitHub)",
+      "R Package (CRAN)"
+    ),
+    contribution_url = c(
+      "https://github.com/elbersb/tidylog/commits?author=KoderKow",
+      "https://github.com/ThinkR-open/golem/commits?author=KoderKow",
+      "https://github.com/koderkow/kowr/commits?author=KoderKow",
+      "https://github.com/ThinkR-open/togglr/commits?author=KoderKow"
+    ),
+    year = c(
+      2019,
+      2020,
+      2019,
+      2020
+    ),
+    comments = c(
+      "First contribution ever!",
+      "Added run_dev function and addin",
+      "Personal R package",
+      "Bug fix for accounts with no project entries"
+    ),
+    info = c(
+      "Provide feedback about dplyr and tidyr operations",
+      "An opinionated framework for building production-grade shiny applications",
+      "Utility functions",
+      "An R and Rstudio wrapper for toggl Api"
+      
+    )
+  ) %>% 
+  bind_rows() %>% 
+  arrange(year, repo_name)
+```
+
+```{r, echo=FALSE}
+d %>% 
+  mutate(
+    repo = glue("[{repo_name}]({repo_url})"),
+    year = glue("[{year}]({contribution_url})")
+  ) %>% 
+  select(
+    repo,
+    repo_type,
+    info,
+    year
+  ) %>% 
+  snake_to() %>% 
+  kable()
+```
+

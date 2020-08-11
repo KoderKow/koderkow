@@ -5,5 +5,4 @@
 public/
 .DS_Store
 drafts/*
-content/about/*.Rmd
 content/about/*.html
