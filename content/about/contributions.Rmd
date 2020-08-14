@@ -1,6 +1,8 @@
 ---
 title: "Open Source Contributions"
-output: github_document
+output:
+  html_document:
+    keep_md: true
 ---
 
 ```{r setup, include=FALSE}
@@ -72,7 +74,7 @@ d %>%
     info,
     year
   ) %>% 
-  snake_to() %>% 
-  kable()
+  snake_to() %>%
+  kable(align = "l", padding = 2)
 ```
 
