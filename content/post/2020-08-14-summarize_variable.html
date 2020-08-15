@@ -1,0 +1,218 @@
+---
+title: New summarize_variable function
+author: Kyle
+date: '2020-08-14'
+slug: demo-summarize-variable
+categories:
+  - Programming
+tags:
+  - R
+cover: /img/post_cover/summarize_variable.png
+---
+
+
+
+<p>I’ve made a new function (within <a href="https://github.com/KoderKow/kowr">{kowr}</a>) for quickly summarizing variables in a dataset. I think <code>{skimr}</code> does a better job of summarizring the whole dataset. However, I find it hard to pipe the <code>{skimr}</code> results into a visualization. These outputs have helped me build quick and easy visualizations while undergoing in-depth EDA’s (Exploratory Data Analysis).</p>
+<div id="libraries" class="section level1">
+<h1>Libraries</h1>
+<p>The <code>penguins</code> data is from the <code>{palmerpenguins}</code> package. I also use <code>{dplyr}</code>, <code>{ggplot2}</code>, <code>{tidyr}</code> and my personal <code>{kowr}</code> package for this demo.</p>
+<pre class="r"><code>library(palmerpenguins)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(kowr)</code></pre>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<pre class="r"><code>penguins</code></pre>
+<pre><code>## # A tibble: 344 x 8
+##    species island bill_length_mm bill_depth_mm flipper_length_… body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;            &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torge…           39.1          18.7              181        3750
+##  2 Adelie  Torge…           39.5          17.4              186        3800
+##  3 Adelie  Torge…           40.3          18                195        3250
+##  4 Adelie  Torge…           NA            NA                 NA          NA
+##  5 Adelie  Torge…           36.7          19.3              193        3450
+##  6 Adelie  Torge…           39.3          20.6              190        3650
+##  7 Adelie  Torge…           38.9          17.8              181        3625
+##  8 Adelie  Torge…           39.2          19.6              195        4675
+##  9 Adelie  Torge…           34.1          18.1              193        3475
+## 10 Adelie  Torge…           42            20.2              190        4250
+## # … with 334 more rows, and 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+<div id="summarize-character-data" class="section level1">
+<h1>Summarize Character Data</h1>
+<pre class="r"><code>d &lt;-
+  penguins %&gt;%
+  summarize_variable(species)
+
+d</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   species       n     p p_format
+##   &lt;fct&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   
+## 1 Adelie      152  0.44 44.19%  
+## 2 Gentoo      124  0.36 36.05%  
+## 3 Chinstrap    68  0.2  19.77%</code></pre>
+<p>The <code>summarize_variable()</code> function will arrange the character variable as a factor, ordered by count of the element.</p>
+<pre class="r"><code>d %&gt;% 
+  ggplot() +
+  aes(
+    x = species,
+    y = n,
+    fill = species,
+    label = p_format
+  ) +
+  geom_col(show.legend = FALSE) +
+  geom_label(
+    fill = &quot;white&quot;,
+    show.legend = FALSE
+  ) + 
+  scale_fill_kow() +
+  theme_kow()</code></pre>
+<p><img src="/post/2020-08-14-summarize_variable_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>This will also work with <code>{dplyr}</code>’s <code>group_by()</code>.</p>
+<pre class="r"><code>d &lt;-
+  penguins %&gt;%
+  group_by(island) %&gt;%
+  summarize_variable(species) %&gt;% 
+  arrange(island, species)
+
+d</code></pre>
+<pre><code>## # A tibble: 5 x 5
+## # Groups:   island [3]
+##   island    species       n     p p_format
+##   &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   
+## 1 Biscoe    Gentoo      124  0.74 73.81%  
+## 2 Biscoe    Adelie       44  0.26 26.19%  
+## 3 Dream     Adelie       56  0.45 45.16%  
+## 4 Dream     Chinstrap    68  0.55 54.84%  
+## 5 Torgersen Adelie       52  1    100.00%</code></pre>
+<pre class="r"><code>d %&gt;% 
+  ggplot() +
+  aes(
+    x = island,
+    y = n,
+    fill = species,
+    label = p_format
+  ) +
+  geom_col(position = &quot;dodge&quot;) +
+  geom_label(
+    fill = &quot;white&quot;,
+    show.legend = FALSE
+  ) + 
+  scale_fill_kow() +
+  theme_kow()</code></pre>
+<p><img src="/post/2020-08-14-summarize_variable_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="summarize-numeric-data" class="section level1">
+<h1>Summarize Numeric Data</h1>
+<pre class="r"><code>d &lt;-
+  penguins %&gt;%
+  summarize_variable(bill_length_mm)
+
+d</code></pre>
+<pre><code>## # A tibble: 1 x 9
+##       n   min    q1 median    q3   max  mean    sd na_count
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1   344  32.1  39.2   44.4  48.5  59.6  43.9  5.46        2</code></pre>
+<p>We can use these to plot lines on a histogram.</p>
+<pre class="r"><code>d2 &lt;-
+  d %&gt;%
+  select(-c(n, sd, na_count)) %&gt;% 
+  pivot_longer(everything()) %&gt;% 
+  mutate(name = factor(
+    x = name,
+    levels = c(&quot;min&quot;, &quot;q1&quot;, &quot;mean&quot;, &quot;median&quot;, &quot;q3&quot;, &quot;max&quot;)
+  ))
+
+d2</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   name   value
+##   &lt;fct&gt;  &lt;dbl&gt;
+## 1 min     32.1
+## 2 q1      39.2
+## 3 median  44.4
+## 4 q3      48.5
+## 5 max     59.6
+## 6 mean    43.9</code></pre>
+<pre class="r"><code>penguins %&gt;% 
+  ggplot() +
+  aes(x = bill_length_mm) +
+  geom_histogram(alpha = 0.8) +
+  geom_vline(
+    data = d2,
+    mapping = aes(
+      xintercept = value,
+      color = name
+    )
+  ) +
+  scale_color_kow() +
+  theme_kow()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="/post/2020-08-14-summarize_variable_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>d &lt;-
+  penguins %&gt;%
+  group_by(species) %&gt;%
+  summarize_variable(bill_length_mm)
+
+d</code></pre>
+<pre><code>## # A tibble: 3 x 10
+##   species       n   min    q1 median    q3   max  mean    sd na_count
+##   &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Adelie      152  32.1  36.8   38.8  40.8  46    38.8  2.66        1
+## 2 Chinstrap    68  40.9  46.4   49.6  51.1  58    48.8  3.34        0
+## 3 Gentoo      124  40.9  45.3   47.3  49.6  59.6  47.5  3.08        1</code></pre>
+<pre class="r"><code>d2 &lt;-
+  d %&gt;%
+  select(-c(n, sd, na_count)) %&gt;% 
+  pivot_longer(-species) %&gt;% 
+  mutate(name = factor(
+    x = name,
+    levels = c(&quot;min&quot;, &quot;q1&quot;, &quot;mean&quot;, &quot;median&quot;, &quot;q3&quot;, &quot;max&quot;)
+  ))
+
+d2</code></pre>
+<pre><code>## # A tibble: 18 x 3
+##    species   name   value
+##    &lt;fct&gt;     &lt;fct&gt;  &lt;dbl&gt;
+##  1 Adelie    min     32.1
+##  2 Adelie    q1      36.8
+##  3 Adelie    median  38.8
+##  4 Adelie    q3      40.8
+##  5 Adelie    max     46  
+##  6 Adelie    mean    38.8
+##  7 Chinstrap min     40.9
+##  8 Chinstrap q1      46.4
+##  9 Chinstrap median  49.6
+## 10 Chinstrap q3      51.1
+## 11 Chinstrap max     58  
+## 12 Chinstrap mean    48.8
+## 13 Gentoo    min     40.9
+## 14 Gentoo    q1      45.3
+## 15 Gentoo    median  47.3
+## 16 Gentoo    q3      49.6
+## 17 Gentoo    max     59.6
+## 18 Gentoo    mean    47.5</code></pre>
+<pre class="r"><code>penguins %&gt;% 
+  ggplot() +
+  aes(x = bill_length_mm) +
+  geom_histogram(alpha = 0.8) +
+  geom_vline(
+    data = d2,
+    mapping = aes(
+      xintercept = value,
+      color = name,
+      group = species
+    )
+  ) +
+  scale_color_kow() +
+  theme_kow() +
+  facet_wrap(
+    facets = ~ species,
+    nrow = 3
+  )</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 2 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="/post/2020-08-14-summarize_variable_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>

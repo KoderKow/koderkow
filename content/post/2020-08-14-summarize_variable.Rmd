@@ -1,0 +1,176 @@
+---
+title: New summarize_variable function
+author: Kyle
+date: '2020-08-14'
+slug: demo-summarize-variable
+categories:
+  - Programming
+tags:
+  - R
+cover: /img/post_cover/summarize_variable.png
+---
+
+I've made a new function (within [{kowr}](https://github.com/KoderKow/kowr)) for quickly summarizing variables in a dataset. I think `{skimr}` does a better job of summarizring the whole dataset. However, I find it hard to pipe the `{skimr}` results into a visualization. These outputs have helped me build quick and easy visualizations while undergoing in-depth EDA's (Exploratory Data Analysis).
+
+# Libraries
+
+The  `penguins` data is from the `{palmerpenguins}` package. I also use `{dplyr}`, `{ggplot2}`, `{tidyr}` and my personal `{kowr}` package for this demo.
+
+```{r, message=FALSE, warning=FALSE}
+library(palmerpenguins)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(kowr)
+```
+
+# Data
+
+```{r}
+penguins
+```
+
+# Summarize Character Data
+
+```{r}
+d <-
+  penguins %>%
+  summarize_variable(species)
+
+d
+```
+
+The `summarize_variable()` function will arrange the character variable as a factor, ordered by count of the element.
+
+```{r}
+d %>% 
+  ggplot() +
+  aes(
+    x = species,
+    y = n,
+    fill = species,
+    label = p_format
+  ) +
+  geom_col(show.legend = FALSE) +
+  geom_label(
+    fill = "white",
+    show.legend = FALSE
+  ) + 
+  scale_fill_kow() +
+  theme_kow()
+```
+
+This will also work with `{dplyr}`'s `group_by()`.
+
+```{r}
+d <-
+  penguins %>%
+  group_by(island) %>%
+  summarize_variable(species) %>% 
+  arrange(island, species)
+
+d
+```
+
+```{r}
+d %>% 
+  ggplot() +
+  aes(
+    x = island,
+    y = n,
+    fill = species,
+    label = p_format
+  ) +
+  geom_col(position = "dodge") +
+  geom_label(
+    fill = "white",
+    show.legend = FALSE
+  ) + 
+  scale_fill_kow() +
+  theme_kow()
+```
+
+# Summarize Numeric Data
+
+```{r}
+d <-
+  penguins %>%
+  summarize_variable(bill_length_mm)
+
+d
+```
+
+We can use these to plot lines on a histogram.
+
+```{r}
+d2 <-
+  d %>%
+  select(-c(n, sd, na_count)) %>% 
+  pivot_longer(everything()) %>% 
+  mutate(name = factor(
+    x = name,
+    levels = c("min", "q1", "mean", "median", "q3", "max")
+  ))
+
+d2
+```
+
+```{r}
+penguins %>% 
+  ggplot() +
+  aes(x = bill_length_mm) +
+  geom_histogram(alpha = 0.8) +
+  geom_vline(
+    data = d2,
+    mapping = aes(
+      xintercept = value,
+      color = name
+    )
+  ) +
+  scale_color_kow() +
+  theme_kow()
+```
+
+```{r}
+d <-
+  penguins %>%
+  group_by(species) %>%
+  summarize_variable(bill_length_mm)
+
+d
+```
+
+```{r}
+d2 <-
+  d %>%
+  select(-c(n, sd, na_count)) %>% 
+  pivot_longer(-species) %>% 
+  mutate(name = factor(
+    x = name,
+    levels = c("min", "q1", "mean", "median", "q3", "max")
+  ))
+
+d2
+```
+
+```{r}
+penguins %>% 
+  ggplot() +
+  aes(x = bill_length_mm) +
+  geom_histogram(alpha = 0.8) +
+  geom_vline(
+    data = d2,
+    mapping = aes(
+      xintercept = value,
+      color = name,
+      group = species
+    )
+  ) +
+  scale_color_kow() +
+  theme_kow() +
+  facet_wrap(
+    facets = ~ species,
+    nrow = 3
+  )
+```
+
