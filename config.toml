@@ -7,7 +7,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 # copyright = ""
 
-# googleAnalytics = ""
+googleAnalytics = "UA-175442279-1"
 
 disqusShortname = "KoderKow"
 
