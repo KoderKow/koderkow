@@ -258,7 +258,9 @@ autoplot(penguin_roc_curves)
 wanted_pkgs <- c("palmerpenguins", "tidymodels", "skimr", "naniar", "vip", "rpart.plot")
 sess <- sessionInfo()
 sess$otherPkgs <- sess$otherPkgs[names(sess$otherPkgs) %in% wanted_pkgs]
-knitr::kable(report::cite_packages(sess))
+cite <- report::cite_packages(sess)
+names(cite) <- ""
+knitr::kable(cite)
 ```
 
 ## Papers
