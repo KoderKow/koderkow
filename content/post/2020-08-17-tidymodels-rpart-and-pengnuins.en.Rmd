@@ -248,6 +248,8 @@ penguin_roc_curves
 autoplot(penguin_roc_curves)
 ```
 
+---
+
 # References
 
 ## Packages
