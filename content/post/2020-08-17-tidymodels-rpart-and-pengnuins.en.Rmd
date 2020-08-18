@@ -38,7 +38,7 @@ skim(penguins)
 naniar::gg_miss_upset(penguins)
 ```
 
-Exploring the data itself will be a separate blog post. So I am opting to remove all rows containing missing data. This will remove a total of 9 rows.
+Exploring the data itself will be a separate blog post. So I am opting to remove all rows containing missing data. This will remove a total of 11 rows.
 
 # Split the data
 
@@ -233,7 +233,7 @@ final_fit %>%
   collect_metrics()
 ```
 
-96% ROC AUC! Great results for a simple tree algorithm. I can visual the ROC AUC curves using the `roc_curve` function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.
+95% ROC AUC! Great results for a simple tree algorithm. I can visual the ROC AUC curves using the `roc_curve` function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.
 
 ```{r}
 penguin_roc_curves <-
@@ -248,4 +248,17 @@ penguin_roc_curves
 autoplot(penguin_roc_curves)
 ```
 
+# References
 
+## Packages
+
+```{r, echo=FALSE}
+wanted_pkgs <- c("palmerpenguins", "tidymodels", "skimr", "naniar", "vip", "rpart.plot")
+sess <- sessionInfo()
+sess$otherPkgs <- sess$otherPkgs[names(sess$otherPkgs) %in% wanted_pkgs]
+knitr::kable(report::cite_packages(sess))
+```
+
+## Papers
+
+Hand, Till (2001). "A Simple Generalisation of the Area Under the ROC Curve for Multiple Class Classification Problems". Machine Learning. Vol 45, Iss 2, pp 171-186.

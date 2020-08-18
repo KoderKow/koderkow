@@ -206,7 +206,7 @@ library(rpart.plot)</code></pre>
 <h2>Addressing missing data</h2>
 <pre class="r"><code>naniar::gg_miss_upset(penguins)</code></pre>
 <p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>Exploring the data itself will be a separate blog post. So I am opting to remove all rows containing missing data. This will remove a total of 9 rows.</p>
+<p>Exploring the data itself will be a separate blog post. So I am opting to remove all rows containing missing data. This will remove a total of 11 rows.</p>
 </div>
 <div id="split-the-data" class="section level1">
 <h1>Split the data</h1>
@@ -318,14 +318,14 @@ rpart_grid</code></pre>
   add_recipe(my_recipe)
 
 rpart_wf</code></pre>
-<pre><code>## ══ Workflow ══════════════════════════════════════════════════════════════════
+<pre><code>## ══ Workflow ═══════════════════════════════════════
 ## Preprocessor: Recipe
 ## Model: decision_tree()
 ## 
-## ── Preprocessor ──────────────────────────────────────────────────────────────
+## ── Preprocessor ───────────────────────────────────
 ## 0 Recipe Steps
 ## 
-## ── Model ─────────────────────────────────────────────────────────────────────
+## ── Model ──────────────────────────────────────────
 ## Decision Tree Model Specification (classification)
 ## 
 ## Main Arguments:
@@ -406,14 +406,14 @@ best_rpart_params</code></pre>
   fit(data = train_data) 
 
 rpart_fit </code></pre>
-<pre><code>## ══ Workflow [trained] ════════════════════════════════════════════════════════
+<pre><code>## ══ Workflow [trained] ═════════════════════════════
 ## Preprocessor: Recipe
 ## Model: decision_tree()
 ## 
-## ── Preprocessor ──────────────────────────────────────────────────────────────
+## ── Preprocessor ───────────────────────────────────
 ## 0 Recipe Steps
 ## 
-## ── Model ─────────────────────────────────────────────────────────────────────
+## ── Model ──────────────────────────────────────────
 ## n= 268 
 ## 
 ## node), split, n, loss, yval, (yprob)
@@ -434,7 +434,7 @@ rpart_fit </code></pre>
 best_rpart</code></pre>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  10ms 
+## Fit time:  5ms 
 ## n= 268 
 ## 
 ## node), split, n, loss, yval, (yprob)
@@ -476,7 +476,7 @@ final_fit</code></pre>
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy multiclass     0.923
 ## 2 roc_auc  hand_till      0.950</code></pre>
-<p>96% ROC AUC! Great results for a simple tree algorithm. I can visual the ROC AUC curves using the <code>roc_curve</code> function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.</p>
+<p>95% ROC AUC! Great results for a simple tree algorithm. I can visual the ROC AUC curves using the <code>roc_curve</code> function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.</p>
 <pre class="r"><code>penguin_roc_curves &lt;-
   final_fit %&gt;%
   collect_predictions() %&gt;% 
@@ -504,4 +504,44 @@ penguin_roc_curves</code></pre>
 ## 16 Gentoo      Inf            1           0</code></pre>
 <pre class="r"><code>autoplot(penguin_roc_curves)</code></pre>
 <p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<div id="packages" class="section level2">
+<h2>Packages</h2>
+<table>
+<colgroup>
+<col width="100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">References</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Brandon Greenwell, Brad Boehmke and Bernie Gray (2020). vip: Variable Importance Plots. R package version 0.2.1. <a href="https://CRAN.R-project.org/package=vip" class="uri">https://CRAN.R-project.org/package=vip</a></td>
+</tr>
+<tr class="even">
+<td align="left">Elin Waring, Michael Quinn, Amelia McNamara, Eduardo Arino de la Rubia, Hao Zhu and Shannon Ellis (2020). skimr: Compact and Flexible Summaries of Data. R package version 2.1.1. <a href="https://CRAN.R-project.org/package=skimr" class="uri">https://CRAN.R-project.org/package=skimr</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Horst AM, Hill AP, Gorman KB (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data. R package version 0.1.0. <a href="https://allisonhorst.github.io/palmerpenguins/" class="uri">https://allisonhorst.github.io/palmerpenguins/</a></td>
+</tr>
+<tr class="even">
+<td align="left">Max Kuhn and Hadley Wickham (2020). tidymodels: Easily Install and Load the ‘Tidymodels’ Packages. R package version 0.1.0. <a href="https://CRAN.R-project.org/package=tidymodels" class="uri">https://CRAN.R-project.org/package=tidymodels</a></td>
+</tr>
+<tr class="odd">
+<td align="left">Nicholas Tierney, Di Cook, Miles McBain and Colin Fay (2020). naniar: Data Structures, Summaries, and Visualisations for Missing Data. R package version 0.5.1. <a href="https://CRAN.R-project.org/package=naniar" class="uri">https://CRAN.R-project.org/package=naniar</a></td>
+</tr>
+<tr class="even">
+<td align="left">Stephen Milborrow (2019). rpart.plot: Plot ‘rpart’ Models: An Enhanced Version of ‘plot.rpart’. R package version 3.0.8. <a href="https://CRAN.R-project.org/package=rpart.plot" class="uri">https://CRAN.R-project.org/package=rpart.plot</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="papers" class="section level2">
+<h2>Papers</h2>
+<p>Hand, Till (2001). “A Simple Generalisation of the Area Under the ROC Curve for Multiple Class Classification Problems”. Machine Learning. Vol 45, Iss 2, pp 171-186.</p>
+</div>
 </div>
