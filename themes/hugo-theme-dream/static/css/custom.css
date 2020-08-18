@@ -22,3 +22,6 @@ code {
   border-radius: 4px;
 }
 
+h2 {
+  margin-top: 10px !important;
+}
