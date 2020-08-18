@@ -14,10 +14,12 @@ disqusShortname = "KoderKow"
 # enableRobotsTXT = true
 
 [params]
-  highlightjsVersion = "10.1.2"
-  highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
-  highlightjsLang = ["r", "yaml"]
-  highlightjsTheme = "github"
+  highlightjs = true
+  highlightjsCDN = "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release/build/highlight.min.js"
+  highlightjsExtraLanguages = ["r", "yml"]
+  highlightjsTheme = "atom-one-light"
+  highlightjsThemeDark = "atom-one-dark"
+  
   background = "#252323"
   # backgroundImage = "/me/background.jpg"
   linkColor = "seagreen"
