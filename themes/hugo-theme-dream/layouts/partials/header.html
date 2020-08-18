@@ -15,7 +15,7 @@
         <img src="{{ .Site.Params.avatar | relURL }}">
       {{ else }}
         <img src="https://www.gravatar.com/avatar/{{ md5 .Site.Params.gravatar.email }}?s=240&d=mp" alt="gravatar">
-		  {{ end }}
+      {{ end }}
     </div>
 
     {{ if or (hasPrefix .RelPermalink "/posts") (hasPrefix .RelPermalink "/tags") (hasPrefix .RelPermalink "/categories") }}
@@ -111,5 +111,3 @@
     {{ end }}
   </section>
 </article>
-
-{{ partial "head_highlightjs" . }}
