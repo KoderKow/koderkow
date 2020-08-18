@@ -9,12 +9,19 @@ tags:
   - Machine Learning
   - R
 cover: /img/post_cover/tidymodels_rpart_penguins.png
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
 ---
 
-I have seen posts on twitter about the `pegnuins` dataset from the `{palmerpenguins}` package. There has been interest within myself to test some `{tidymodels}` flows on it. As a self labeled "novice data scientist" I have decided to spend my free time on tree models. So this post will be quickly going over the tidymodels process and seeing how well we can predict the different classes of penguins using a simple decision tree!
+I have seen posts on twitter about the `penguins` dataset from the `{palmerpenguins}` package. There has been interest within myself to test some `{tidymodels}` flows on it. As a self labeled "novice data scientist" I have decided to spend my free time on tree models. So this post will be quickly going over the tidymodels process and seeing how well we can predict the different classes of penguins using a simple decision tree!
 
 ---
 
+# Setup
+
+## Libraries
 ```{r,warning=FALSE, message=FALSE}
 library(palmerpenguins)
 library(tidymodels)
@@ -24,6 +31,8 @@ library(vip)
 library(rpart.plot)
 ```
 
+## Data Preview
+
 ```{r}
 penguins
 ```
@@ -32,7 +41,7 @@ penguins
 skim(penguins)
 ```
 
-## Addressing missing data
+## Address Missing Data
 
 ```{r}
 naniar::gg_miss_upset(penguins)
@@ -40,7 +49,9 @@ naniar::gg_miss_upset(penguins)
 
 Exploring the data itself will be a separate blog post. So I am opting to remove all rows containing missing data. This will remove a total of 11 rows.
 
-# Split the data
+# tidymodels Flow
+
+## Split the data
 
 We will set a seed for reproducability. This means when we randomly split the data (80% to training, 20% to testing) that the results of the splits and upcoming cross validation folds will be the same for everyone who uses the same seed. It helps control the randomness.
 
@@ -60,6 +71,8 @@ train_data <- training(data_split)
 test_data <- testing(data_split)
 ```
 
+## 5-Folds Cross-Validation
+
 I am choosing 5 folds because the `train_data` only has `r nrow(train_data)` rows of data, and this will allow the code to run faster. With a lower $k$ in cross validation, this generally means higher bias and lower variance because each fold will have more training training data. To help address the high bias, I will repeat the 5 fold process three times. In total I will have 15 folds to optimize my models parameters on.
 
 ```{r}
@@ -73,6 +86,8 @@ penguin_folds <- vfold_cv(
 penguin_folds
 ```
 
+## Recipe
+
 Recipes in `{tidymodels}` is a description of what steps should be applied to a data set for model fitting. Here I am fitting a formula on the `train_data`. The `add_role(...)` function changes the role of a variable in the recipe. The `new_role` parameter can take anything we would like. There are key roles like `outcome` and `predictor`. Since I do not want to use the variable `year`, I will assign a random role of `"dont_use"` so that it will not be used during the model fitting process. Since I did not remove this column before hand and in the formula I specied `species ~ .`, that means every column. So this will avoid using that column.
 
 ```{r}
@@ -84,6 +99,8 @@ my_recipe
 ```
 
 We can see our model will have one outcome, `species`, and will use 7 predictors to generate that outcome.
+
+## Creating an rpart Model Obejct
 
 rpart models have 3 parameters that can be optimized.
 
@@ -108,6 +125,8 @@ rpart_mod <-
 rpart_mod
 ```
 
+## Tune Grid
+
 If you are familiar with your data and know what parameters will work best you can create your own grid. At the moment I am fascinated by these algorithms that tries its best to cover the parameter space given the number of different parameter combinations to test. For this post I will pick 5 so that the model training doesnt take too long. Each fold (we have 15) will be trained 5 times using the different combination of parameters that are generated using `grid_latin_hypercube()`. 
 
 ```{r}
@@ -122,6 +141,8 @@ rpart_grid <-
 rpart_grid
 ```
 
+## Workflow
+
 A workflow is a container object that aggregates information required to fit and predict from a model. Here I will add our model to fit `rpart_mod` and the recipe we created `my_recipe`.
 
 ```{r}
@@ -132,6 +153,8 @@ rpart_wf <-
 
 rpart_wf
 ```
+
+## Compute Performance Metrics
 
 I will now use that workflow process to feed into `tune_grid()`. This function will compute a set of performance metrics (since we are doing classifcation we are looking at ROC AUC) for each of tuning parameter sets on each fold. For classification ROC AUC is used for evaluating models; aside from accuracy it takes sensitivity and specificity into account. Generally, ROC AUC is for a binary output. Here we have three so the method from [Hand, Till, (2001)](https://link.springer.com/article/10.1023/A:1010920819831) will be used to compute the multi class ROC AUC. This will result in 15 rows, a row per fold.
 
@@ -155,6 +178,8 @@ tree_res
 tree_res %>% 
   collect_metrics() 
 ```
+
+## Selecting the "Best" Model
 
 `show_best("roc_auc")` will arrange our metrics by the highest average.
 
@@ -181,6 +206,27 @@ final_wf <-
   finalize_workflow(best_rpart_params)
 ```
 
+## Evaluate on Test Data
+
+Finally, we can evaluate our final fit against the test data. Using the workflow and piping it into `last_fit(data_split)`, this process will take everything we have done and produce these results.
+
+```{r}
+final_fit <- 
+  final_wf %>%
+  last_fit(data_split) 
+
+final_fit
+```
+
+```{r}
+final_fit %>%
+  collect_metrics()
+```
+
+95% ROC AUC! Great results for a simple tree algorithm.
+
+# Exploring the Final Model
+
 Using our final workflow we can fit the model using the training data.
 
 ```{r}
@@ -201,11 +247,15 @@ best_rpart <-
 best_rpart
 ```
 
+## Variable Importance
+
 With this model object I can creating variable importance plots using the `{vip}` package.
 
 ```{r}
 vip(best_rpart)
 ```
+
+## Visualize the Model
 
 The nice thing about rpart is that sense it is a singular decision tree we can easily visualize it. I will use the `{rpart.plot}` package for this visualization.
 
@@ -218,22 +268,9 @@ rpart.plot(
   )
 ```
 
-Finally, we can evaluate our final fit against the test data. Using the workflow and piping it into `last_fit(data_split)`, this process will take everything we have done and produce these results.
+## ROC AUC Plots
 
-```{r}
-final_fit <- 
-  final_wf %>%
-  last_fit(data_split) 
-
-final_fit
-```
-
-```{r}
-final_fit %>%
-  collect_metrics()
-```
-
-95% ROC AUC! Great results for a simple tree algorithm. I can visual the ROC AUC curves using the `roc_curve` function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.
+I can visual the ROC AUC curves using the `roc_curve` function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.
 
 ```{r}
 penguin_roc_curves <-

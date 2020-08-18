@@ -9,18 +9,58 @@ tags:
   - Machine Learning
   - R
 cover: /img/post_cover/tidymodels_rpart_penguins.png
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
 ---
 
 
+<div id="TOC">
+<ul>
+<li><a href="#setup">Setup</a><ul>
+<li><a href="#libraries">Libraries</a></li>
+<li><a href="#data-preview">Data Preview</a></li>
+<li><a href="#address-missing-data">Address Missing Data</a></li>
+</ul></li>
+<li><a href="#tidymodels-flow">tidymodels Flow</a><ul>
+<li><a href="#split-the-data">Split the data</a></li>
+<li><a href="#folds-cross-validation">5-Folds Cross-Validation</a></li>
+<li><a href="#recipe">Recipe</a></li>
+<li><a href="#creating-an-rpart-model-obejct">Creating an rpart Model Obejct</a></li>
+<li><a href="#tune-grid">Tune Grid</a></li>
+<li><a href="#workflow">Workflow</a></li>
+<li><a href="#compute-performance-metrics">Compute Performance Metrics</a></li>
+<li><a href="#selecting-the-best-model">Selecting the “Best” Model</a></li>
+<li><a href="#evaluate-on-test-data">Evaluate on Test Data</a></li>
+</ul></li>
+<li><a href="#exploring-the-final-model">Exploring the Final Model</a><ul>
+<li><a href="#variable-importance">Variable Importance</a></li>
+<li><a href="#visualize-the-model">Visualize the Model</a></li>
+<li><a href="#roc-auc-plots">ROC AUC Plots</a></li>
+</ul></li>
+<li><a href="#references">References</a><ul>
+<li><a href="#packages">Packages</a></li>
+<li><a href="#papers">Papers</a></li>
+</ul></li>
+</ul>
+</div>
 
-<p>I have seen posts on twitter about the <code>pegnuins</code> dataset from the <code>{palmerpenguins}</code> package. There has been interest within myself to test some <code>{tidymodels}</code> flows on it. As a self labeled “novice data scientist” I have decided to spend my free time on tree models. So this post will be quickly going over the tidymodels process and seeing how well we can predict the different classes of penguins using a simple decision tree!</p>
+<p>I have seen posts on twitter about the <code>penguins</code> dataset from the <code>{palmerpenguins}</code> package. There has been interest within myself to test some <code>{tidymodels}</code> flows on it. As a self labeled “novice data scientist” I have decided to spend my free time on tree models. So this post will be quickly going over the tidymodels process and seeing how well we can predict the different classes of penguins using a simple decision tree!</p>
 <hr />
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<div id="libraries" class="section level2">
+<h2>Libraries</h2>
 <pre class="r"><code>library(palmerpenguins)
 library(tidymodels)
 library(skimr)
 library(naniar)
 library(vip)
 library(rpart.plot)</code></pre>
+</div>
+<div id="data-preview" class="section level2">
+<h2>Data Preview</h2>
 <pre class="r"><code>penguins</code></pre>
 <pre><code>## # A tibble: 344 x 8
 ##    species island bill_length_mm bill_depth_mm flipper_length_… body_mass_g
@@ -202,14 +242,18 @@ library(rpart.plot)</code></pre>
 </tr>
 </tbody>
 </table>
-<div id="addressing-missing-data" class="section level2">
-<h2>Addressing missing data</h2>
+</div>
+<div id="address-missing-data" class="section level2">
+<h2>Address Missing Data</h2>
 <pre class="r"><code>naniar::gg_miss_upset(penguins)</code></pre>
 <p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Exploring the data itself will be a separate blog post. So I am opting to remove all rows containing missing data. This will remove a total of 11 rows.</p>
 </div>
-<div id="split-the-data" class="section level1">
-<h1>Split the data</h1>
+</div>
+<div id="tidymodels-flow" class="section level1">
+<h1>tidymodels Flow</h1>
+<div id="split-the-data" class="section level2">
+<h2>Split the data</h2>
 <p>We will set a seed for reproducability. This means when we randomly split the data (80% to training, 20% to testing) that the results of the splits and upcoming cross validation folds will be the same for everyone who uses the same seed. It helps control the randomness.</p>
 <pre class="r"><code>set.seed(1996)
 
@@ -224,6 +268,9 @@ data_split &lt;-
 
 train_data &lt;- training(data_split)
 test_data &lt;- testing(data_split)</code></pre>
+</div>
+<div id="folds-cross-validation" class="section level2">
+<h2>5-Folds Cross-Validation</h2>
 <p>I am choosing 5 folds because the <code>train_data</code> only has 268 rows of data, and this will allow the code to run faster. With a lower <span class="math inline">\(k\)</span> in cross validation, this generally means higher bias and lower variance because each fold will have more training training data. To help address the high bias, I will repeat the 5 fold process three times. In total I will have 15 folds to optimize my models parameters on.</p>
 <pre class="r"><code>penguin_folds &lt;- vfold_cv(
   data = train_data,
@@ -252,6 +299,9 @@ penguin_folds</code></pre>
 ## 13 &lt;split [215/53]&gt; Repeat3 Fold3
 ## 14 &lt;split [215/53]&gt; Repeat3 Fold4
 ## 15 &lt;split [215/53]&gt; Repeat3 Fold5</code></pre>
+</div>
+<div id="recipe" class="section level2">
+<h2>Recipe</h2>
 <p>Recipes in <code>{tidymodels}</code> is a description of what steps should be applied to a data set for model fitting. Here I am fitting a formula on the <code>train_data</code>. The <code>add_role(...)</code> function changes the role of a variable in the recipe. The <code>new_role</code> parameter can take anything we would like. There are key roles like <code>outcome</code> and <code>predictor</code>. Since I do not want to use the variable <code>year</code>, I will assign a random role of <code>&quot;dont_use&quot;</code> so that it will not be used during the model fitting process. Since I did not remove this column before hand and in the formula I specied <code>species ~ .</code>, that means every column. So this will avoid using that column.</p>
 <pre class="r"><code>my_recipe &lt;-
   recipe(species ~ ., data = train_data) %&gt;% 
@@ -267,6 +317,9 @@ my_recipe</code></pre>
 ##    outcome          1
 ##  predictor          7</code></pre>
 <p>We can see our model will have one outcome, <code>species</code>, and will use 7 predictors to generate that outcome.</p>
+</div>
+<div id="creating-an-rpart-model-obejct" class="section level2">
+<h2>Creating an rpart Model Obejct</h2>
 <p>rpart models have 3 parameters that can be optimized.</p>
 <ol style="list-style-type: decimal">
 <li><strong>cost_complexity</strong>: This is a parameter that helps “snips” or removes unnesseccary splits of the tree by using a formula (not showing the formula) where the cost complexity value helps determine if the split improves the model all around.</li>
@@ -293,6 +346,9 @@ rpart_mod</code></pre>
 ##   min_n = tune()
 ## 
 ## Computational engine: rpart</code></pre>
+</div>
+<div id="tune-grid" class="section level2">
+<h2>Tune Grid</h2>
 <p>If you are familiar with your data and know what parameters will work best you can create your own grid. At the moment I am fascinated by these algorithms that tries its best to cover the parameter space given the number of different parameter combinations to test. For this post I will pick 5 so that the model training doesnt take too long. Each fold (we have 15) will be trained 5 times using the different combination of parameters that are generated using <code>grid_latin_hypercube()</code>.</p>
 <pre class="r"><code>rpart_grid &lt;-
   grid_latin_hypercube(
@@ -311,6 +367,9 @@ rpart_grid</code></pre>
 ## 3   0.00000591             5    39
 ## 4   0.0000000716          13    32
 ## 5   0.00000000265         10    23</code></pre>
+</div>
+<div id="workflow" class="section level2">
+<h2>Workflow</h2>
 <p>A workflow is a container object that aggregates information required to fit and predict from a model. Here I will add our model to fit <code>rpart_mod</code> and the recipe we created <code>my_recipe</code>.</p>
 <pre class="r"><code>rpart_wf &lt;-
   workflow() %&gt;%
@@ -334,6 +393,9 @@ rpart_wf</code></pre>
 ##   min_n = tune()
 ## 
 ## Computational engine: rpart</code></pre>
+</div>
+<div id="compute-performance-metrics" class="section level2">
+<h2>Compute Performance Metrics</h2>
 <p>I will now use that workflow process to feed into <code>tune_grid()</code>. This function will compute a set of performance metrics (since we are doing classifcation we are looking at ROC AUC) for each of tuning parameter sets on each fold. For classification ROC AUC is used for evaluating models; aside from accuracy it takes sensitivity and specificity into account. Generally, ROC AUC is for a binary output. Here we have three so the method from <a href="https://link.springer.com/article/10.1023/A:1010920819831">Hand, Till, (2001)</a> will be used to compute the multi class ROC AUC. This will result in 15 rows, a row per fold.</p>
 <p>If we do not specify the <code>metrics</code> parameter <code>tune_grid()</code> will return multiple different evaluation metrics. To simplify the process and we know what metric we want we will specify it.</p>
 <pre class="r"><code>tree_res &lt;- 
@@ -375,6 +437,9 @@ tree_res</code></pre>
 ## 3   0.00000591             5    39 roc_auc hand_till  0.948    15 0.00731
 ## 4   0.0000372              4    10 roc_auc hand_till  0.976    15 0.00328
 ## 5   0.00844                8     9 roc_auc hand_till  0.975    15 0.00324</code></pre>
+</div>
+<div id="selecting-the-best-model" class="section level2">
+<h2>Selecting the “Best” Model</h2>
 <p><code>show_best(&quot;roc_auc&quot;)</code> will arrange our metrics by the highest average.</p>
 <pre class="r"><code>tree_res %&gt;%
   show_best()</code></pre>
@@ -400,6 +465,32 @@ best_rpart_params</code></pre>
 <pre class="r"><code>final_wf &lt;- 
   rpart_wf %&gt;% 
   finalize_workflow(best_rpart_params)</code></pre>
+</div>
+<div id="evaluate-on-test-data" class="section level2">
+<h2>Evaluate on Test Data</h2>
+<p>Finally, we can evaluate our final fit against the test data. Using the workflow and piping it into <code>last_fit(data_split)</code>, this process will take everything we have done and produce these results.</p>
+<pre class="r"><code>final_fit &lt;- 
+  final_wf %&gt;%
+  last_fit(data_split) 
+
+final_fit</code></pre>
+<pre><code>## # # Monte Carlo cross-validation (0.8/0.2) with 1 resamples  
+## # A tibble: 1 x 6
+##   splits       id           .metrics      .notes       .predictions    .workflow
+##   &lt;list&gt;       &lt;chr&gt;        &lt;list&gt;        &lt;list&gt;       &lt;list&gt;          &lt;list&gt;   
+## 1 &lt;split [268… train/test … &lt;tibble [2 ×… &lt;tibble [0 … &lt;tibble [65 × … &lt;workflo…</code></pre>
+<pre class="r"><code>final_fit %&gt;%
+  collect_metrics()</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy multiclass     0.923
+## 2 roc_auc  hand_till      0.950</code></pre>
+<p>95% ROC AUC! Great results for a simple tree algorithm.</p>
+</div>
+</div>
+<div id="exploring-the-final-model" class="section level1">
+<h1>Exploring the Final Model</h1>
 <p>Using our final workflow we can fit the model using the training data.</p>
 <pre class="r"><code>rpart_fit &lt;- 
   final_wf %&gt;%
@@ -434,7 +525,7 @@ rpart_fit </code></pre>
 best_rpart</code></pre>
 <pre><code>## parsnip model object
 ## 
-## Fit time:  8ms 
+## Fit time:  7ms 
 ## n= 268 
 ## 
 ## node), split, n, loss, yval, (yprob)
@@ -447,9 +538,14 @@ best_rpart</code></pre>
 ##   3) flipper_length_mm&gt;=206.5 102   6 Gentoo (0.01960784 0.03921569 0.94117647)  
 ##     6) island=Dream,Torgersen 6   2 Chinstrap (0.33333333 0.66666667 0.00000000) *
 ##     7) island=Biscoe 96   0 Gentoo (0.00000000 0.00000000 1.00000000) *</code></pre>
+<div id="variable-importance" class="section level2">
+<h2>Variable Importance</h2>
 <p>With this model object I can creating variable importance plots using the <code>{vip}</code> package.</p>
 <pre class="r"><code>vip(best_rpart)</code></pre>
-<p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="visualize-the-model" class="section level2">
+<h2>Visualize the Model</h2>
 <p>The nice thing about rpart is that sense it is a singular decision tree we can easily visualize it. I will use the <code>{rpart.plot}</code> package for this visualization.</p>
 <pre class="r"><code>rpart.plot(
   x =  best_rpart$fit,
@@ -457,26 +553,11 @@ best_rpart</code></pre>
   type = 0,
   extra = 0
   )</code></pre>
-<p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<p>Finally, we can evaluate our final fit against the test data. Using the workflow and piping it into <code>last_fit(data_split)</code>, this process will take everything we have done and produce these results.</p>
-<pre class="r"><code>final_fit &lt;- 
-  final_wf %&gt;%
-  last_fit(data_split) 
-
-final_fit</code></pre>
-<pre><code>## # # Monte Carlo cross-validation (0.8/0.2) with 1 resamples  
-## # A tibble: 1 x 6
-##   splits       id           .metrics      .notes       .predictions    .workflow
-##   &lt;list&gt;       &lt;chr&gt;        &lt;list&gt;        &lt;list&gt;       &lt;list&gt;          &lt;list&gt;   
-## 1 &lt;split [268… train/test … &lt;tibble [2 ×… &lt;tibble [0 … &lt;tibble [65 × … &lt;workflo…</code></pre>
-<pre class="r"><code>final_fit %&gt;%
-  collect_metrics()</code></pre>
-<pre><code>## # A tibble: 2 x 3
-##   .metric  .estimator .estimate
-##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy multiclass     0.923
-## 2 roc_auc  hand_till      0.950</code></pre>
-<p>95% ROC AUC! Great results for a simple tree algorithm. I can visual the ROC AUC curves using the <code>roc_curve</code> function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.</p>
+<p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+<div id="roc-auc-plots" class="section level2">
+<h2>ROC AUC Plots</h2>
+<p>I can visual the ROC AUC curves using the <code>roc_curve</code> function. Since this is a multiclass output and the ROC AUC is calculated as an average of the pairwise ROC AUC per class, there will have to be a plot per class.</p>
 <pre class="r"><code>penguin_roc_curves &lt;-
   final_fit %&gt;%
   collect_predictions() %&gt;% 
@@ -505,6 +586,7 @@ penguin_roc_curves</code></pre>
 <pre class="r"><code>autoplot(penguin_roc_curves)</code></pre>
 <p><img src="/post/2020-08-17-tidymodels-rpart-and-pengnuins.en_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <hr />
+</div>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
