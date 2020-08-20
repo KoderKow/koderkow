@@ -12,6 +12,10 @@ cover: /img/post_cover/summarize_variable.png
 
 I've made a new function (within [{kowr}](https://github.com/KoderKow/kowr)) for quickly summarizing variables in a dataset. I think `{skimr}` does a better job of summarizring the whole dataset. However, I find it hard to pipe the `{skimr}` results into a visualization. These outputs have helped me build quick and easy visualizations while undergoing in-depth EDA's (Exploratory Data Analysis).
 
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+```
+
 # Libraries
 
 The  `penguins` data is from the `{palmerpenguins}` package. I also use `{dplyr}`, `{ggplot2}`, `{tidyr}` and my personal `{kowr}` package for this demo.

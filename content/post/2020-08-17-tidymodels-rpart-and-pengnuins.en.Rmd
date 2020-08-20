@@ -19,6 +19,10 @@ I have seen posts on twitter about the `penguins` dataset from the `{palmerpengu
 
 ---
 
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+```
+
 # Setup
 
 ## Libraries
@@ -73,7 +77,7 @@ test_data <- testing(data_split)
 
 ## 5-Folds Cross-Validation
 
-I am choosing 5 folds because the `train_data` only has `r nrow(train_data)` rows of data, and this will allow the code to run faster. With a lower $k$ in cross validation, this generally means higher bias and lower variance because each fold will have more training training data. To help address the high bias, I will repeat the 5 fold process three times. In total I will have 15 folds to optimize my models parameters on.
+I am choosing 5 folds because the `train_data` only has `r nrow(train_data)` rows of data, and this will allow the code to run faster. With a lower *k* in cross validation, this generally means higher bias and lower variance because each fold will have more training training data. To help address the high bias, I will repeat the 5 fold process three times. In total I will have 15 folds to optimize my models parameters on.
 
 ```{r}
 penguin_folds <- vfold_cv(

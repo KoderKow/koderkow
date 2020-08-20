@@ -15,6 +15,10 @@ output:
     toc_depth: 2
 ---
 
+<script src="/rmarkdown-libs/clipboard/clipboard.min.js"></script>
+<link href="/rmarkdown-libs/primer-tooltips/build.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/klippy/css/klippy.min.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/klippy/js/klippy.min.js"></script>
 
 <div id="TOC">
 <ul>
@@ -48,6 +52,10 @@ output:
 
 <p>I have seen posts on twitter about the <code>penguins</code> dataset from the <code>{palmerpenguins}</code> package. There has been interest within myself to test some <code>{tidymodels}</code> flows on it. As a self labeled “novice data scientist” I have decided to spend my free time on tree models. So this post will be quickly going over the tidymodels process and seeing how well we can predict the different classes of penguins using a simple decision tree!</p>
 <hr />
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
 <div id="setup" class="section level1">
 <h1>Setup</h1>
 <div id="libraries" class="section level2">
@@ -271,7 +279,7 @@ test_data &lt;- testing(data_split)</code></pre>
 </div>
 <div id="folds-cross-validation" class="section level2">
 <h2>5-Folds Cross-Validation</h2>
-<p>I am choosing 5 folds because the <code>train_data</code> only has 268 rows of data, and this will allow the code to run faster. With a lower <span class="math inline">\(k\)</span> in cross validation, this generally means higher bias and lower variance because each fold will have more training training data. To help address the high bias, I will repeat the 5 fold process three times. In total I will have 15 folds to optimize my models parameters on.</p>
+<p>I am choosing 5 folds because the <code>train_data</code> only has 268 rows of data, and this will allow the code to run faster. With a lower <em>k</em> in cross validation, this generally means higher bias and lower variance because each fold will have more training training data. To help address the high bias, I will repeat the 5 fold process three times. In total I will have 15 folds to optimize my models parameters on.</p>
 <pre class="r"><code>penguin_folds &lt;- vfold_cv(
   data = train_data,
   v = 5,

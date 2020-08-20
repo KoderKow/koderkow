@@ -25,3 +25,7 @@ code {
 h2 {
   margin-top: 10px !important;
 }
+
+.markdown-body img {
+    background-color: transparent !important;
+}
