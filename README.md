@@ -29,7 +29,7 @@ R code and other miscellaneous topics
 
 ### 😄 Pronouns
 
-  - (pronoun.is/he)\[pronoun.is/he\]
+  - [pronoun.is/he](pronoun.is/he)
 
 ### ⚡ Fun fact
 
