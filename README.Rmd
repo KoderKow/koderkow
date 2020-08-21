@@ -2,16 +2,20 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-# koderkow
+<h3>
+  👋 Hello! My name is Kyle <br>
+  I am a data analytics associate at CLA (CliftonLarsonAllen)<br>
+  I am an R user that focuses on<br>
+  <span style="padding-left:20px">&#183; package development</span><br>
+  <span style="padding-left:20px">&#183; shiny dashboards</span><br>
+  <span style="padding-left:20px">&#183; machine learning</span><br>
+  Hobbies include learning, reading, video games<br>
+  Loves include Lexi, Star, and Zordon 💖
+</h3>
+
+## blog
 
 <!-- badges: start -->
 [![Website koderkow.rbind.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](http://shields.io/)
@@ -20,4 +24,5 @@ knitr::opts_chunk$set(
 [![hugo theme](http://img.shields.io/badge/Hugo%20Theme-dream-FF4088?logo=hugo)](https://g1eny0ung.site/hugo-theme-dream/#/)
 <!-- badges: end -->
 
-My personal blog :)
+My blog consists of posts of me exploring R code and other miscellaneous topics
+
