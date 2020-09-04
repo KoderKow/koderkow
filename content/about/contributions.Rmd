@@ -18,44 +18,50 @@ d <-
       "tidylog",
       "golem",
       "kowr",
-      "togglr"
+      "togglr",
+      "shinydashboardPlus"
     ),
     repo_url = c(
       "https://github.com/elbersb/tidylog/",
       "https://github.com/ThinkR-open/golem",
       "https://github.com/KoderKow/kowr",
-      "https://github.com/ThinkR-open/togglr"
+      "https://github.com/ThinkR-open/togglr",
+      "https://github.com/RinteRface/shinydashboardPlus"
     ),
     repo_type = c(
       "R Package (CRAN)",
       "R Package (CRAN)",
       "R Package (GitHub)",
+      "R Package (CRAN)",
       "R Package (CRAN)"
     ),
     contribution_url = c(
-      "https://github.com/elbersb/tidylog/commits?author=KoderKow",
-      "https://github.com/ThinkR-open/golem/commits?author=KoderKow",
-      "https://github.com/koderkow/kowr/commits?author=KoderKow",
-      "https://github.com/ThinkR-open/togglr/commits?author=KoderKow"
+      "https://github.com/elbersb/tidylog/pulls?q=is%3Apr+author%3Akoderkow+is%3Aclosed+",
+      "https://github.com/ThinkR-open/golem/pulls?q=is%3Apr+author%3Akoderkow+is%3Aclosed+",
+      "https://github.com/koderkow/kowr/pulls?q=is%3Apr+author%3Akoderkow+is%3Aclosed+",
+      "https://github.com/ThinkR-open/togglr/pulls?q=is%3Apr+author%3Akoderkow+is%3Aclosed+",
+      "https://github.com/RinteRface/shinydashboardPlus/pulls?q=is%3Apr+author%3Akoderkow+is%3Aclosed+"
     ),
     year = c(
       2019,
       2020,
       2019,
+      2020,
       2020
     ),
     comments = c(
-      "First contribution ever!",
+      "First contribution ever! Add more functionality and clarity",
       "Added run_dev function and addin",
       "Personal R package",
-      "Bug fix for accounts with no project entries"
+      "Bug fix for accounts with no project entries",
+      "Made user card more flexible"
     ),
     info = c(
       "Provide feedback about dplyr and tidyr operations",
       "An opinionated framework for building production-grade shiny applications",
       "Utility functions",
-      "An R and Rstudio wrapper for toggl Api"
-      
+      "An R and Rstudio wrapper for toggl Api",
+      "extensions for shinydashboard"
     )
   ) %>% 
   bind_rows() %>% 
