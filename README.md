@@ -1,7 +1,7 @@
 
 <h3>
 
-👋 Hello\! My name is Kyle <br> I am a data analytics associate at CLA
+👋 Hello\! My name is Kyle <br> I am a data science senior at CLA
 (CliftonLarsonAllen)<br> I am an R user that focuses on<br>
 <span style="padding-left:20px">· package development</span><br>
 <span style="padding-left:20px">· shiny dashboards</span><br>
@@ -40,9 +40,9 @@ R code and other miscellaneous topics
 
 ### 🌱 I’m currently learning
 
-  - Dabbling in Hugo
-  - tiymodels
-  - Smite
+  - Adv. R Package Development
+  - Tidymodels
+  - Python 🐍
 
 ### 💬 Ask me about
 
