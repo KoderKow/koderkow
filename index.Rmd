@@ -1,3 +1,20 @@
 ---
-site: blogdown:::blogdown_site
+title: "Kyle Harris"
+image: "kow.jpeg"
+color1: "#fe7f2d"
+color2: "#cef9f2"
+angle: 130
+links:
+  - label: EatGameLove
+    url: "https://eatgamelove.com/"
+  - label: Twitter
+    url: "https://twitter.com/koderkow"
+  - label: GitHub
+    url: "https://github.com/koderkow"
+  - label: Linktree
+    url: "https://linktr.ee/eatgamelove"
+output:
+  postcards::onofre
 ---
+
+My name is Kyle, or Kow! Thanks for visiting this page! Please check out the links below for my socials and passion projects! 🐄
