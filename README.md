@@ -24,8 +24,8 @@ Loves include
 <!-- badges: start -->
 
 [Eat Game Love](https://theeatgamelove.com/) is a brand created by my partner and I to help promote things we are passionate about;
-- **Eat**: cooking, eating, healthy liveing
-- **Game**: I stream on [twitch](https://twitch.tv/theeatgamelove) with my partner! We play videos games and a variety of other things
+- **Eat**: cooking, eating, healthy living
+- **Game**: We stream on [twitch](https://twitch.tv/theeatgamelove) with my partner! We play videos games and a variety of other things
 - **Love**: Topics we love; coding, journaling, social topics, and more
 
 ## 😄 Pronouns
